@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>ZooKeeper集群的安装、配置、高可用测试 | 张亲的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
+<meta name="keywords" content="Zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper集群的安装、配置、高可用测试">
+<meta property="og:url" content="http://yoursite.com/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/index.html">
+<meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-23T16:54:39.050Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooKeeper集群的安装、配置、高可用测试">
+<meta name="twitter:description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
+  
+    <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">张亲的技术博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ZooKeeper集群的安装、配置、高可用测试" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/" class="article-date">
+  <time datetime="2018-07-16T08:39:54.000Z" itemprop="datePublished">2018-07-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/基于Dubbo的分布式系统架构实战/">基于Dubbo的分布式系统架构实战</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ZooKeeper集群的安装、配置、高可用测试
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Dubbo建议使用ZooKeeper作为服务的注册中心。<br>ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。</p>
+<a id="more"></a>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
+<li>服务器<br>服务器1：<code>192.168.1.131</code><br>服务器2：<code>192.168.1.132</code><br>服务器3：<code>192.168.1.133</code></li>
+<li>软件<br>[jdk1.8.0_101]<br>[zookeeper-3.4.6]</li>
+</ul>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><p>略</p>
+<h2 id="添加主机名映射"><a href="#添加主机名映射" class="headerlink" title="添加主机名映射"></a>添加主机名映射</h2><p>修改操作系统的/etc/hosts文件，添加IP与主机名映射（可省略，主要用于第4条替换IP地址）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/hosts</span><br><span class="line">192.168.1.13X zookeeper0X</span><br></pre></td></tr></table></figure></p>
+<p>（X代表节点号1、2、3，此处和规划的IP最后一个数字相同，以下同解）</p>
+<h2 id="解压并拷贝zoo-cfg文件"><a href="#解压并拷贝zoo-cfg文件" class="headerlink" title="解压并拷贝zoo.cfg文件"></a>解压并拷贝zoo.cfg文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ tar -zxvf zookeeper-3.4.6.tar.gz -C /zhangqin/appserver/</span><br><span class="line">$ cd /zhangqin/appserver/zookeeper-3.4.6/conf/</span><br><span class="line">$ cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+<h2 id="修改zoo-cfg配置文件"><a href="#修改zoo-cfg配置文件" class="headerlink" title="修改zoo.cfg配置文件"></a>修改zoo.cfg配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ vi zoo.cfg</span><br><span class="line">tickTime=2000</span><br><span class="line">initLimit=10</span><br><span class="line">syncLimit=5</span><br><span class="line">clientPort=2181</span><br><span class="line">dataDir=/zhangqin/data/zookeeper</span><br><span class="line">dataLogDir=/zhangqin/logs/zookeeper</span><br><span class="line">server.1=192.168.1.131:2881:3881</span><br><span class="line">server.2=192.168.1.132:2881:3881</span><br><span class="line">server.3=192.168.1.133:2881:3881</span><br></pre></td></tr></table></figure>
+<h2 id="配置文件参数说明"><a href="#配置文件参数说明" class="headerlink" title="配置文件参数说明"></a>配置文件参数说明</h2><ul>
+<li><p>tickTime=2000<br>tickTime这个时间是作为ZooKeeper服务器之间或客户端与服务器之间维持心跳的时间间隔。也就是每个tickTime时间间隔就会发送一个心跳。</p>
+</li>
+<li><p>initLimit=10<br>initLimit这个配置项是用来配置ZooKeeper接收客户端（这里说的客户端不是用户连接ZooKeeper服务器的客户端，而是ZooKeeper服务器集群中连接到Leader的Follower服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过10个心跳时间（也就是tickTime）长度后ZooKeeper服务器还没有收到客户端的返回消息，那么表明这个客户端连接失败。总时间长度就是10*2000=20秒。</p>
+</li>
+<li><p>syncLimit=5<br>syncLimit这个配置项标识Leader与Follower之间发送消息，请求和应答时间长度，最长不超过多少个tickTime的时间长度，总的时间长度就是5*2000=10秒。</p>
+</li>
+<li><p>dataDir=/zhangqin/data/zookeeper<br>dataDir顾名思义就是ZooKeeper保存数据的目录，默认情况下ZooKeeper将写数据的日志文件也保存在这个目录里。</p>
+</li>
+<li><p>dataLogDir=/zhangqin/logs/zookeeper<br>ZooKeeper 保存日志文件的目录</p>
+</li>
+<li><p>clientPort=2181<br>clientPort这个端口就是客户端（应用程序）连接ZooKeeper服务器的端口，ZooKeeper会监听这个端口接收客户端的访问请求。</p>
+</li>
+<li><p>server.A=B:C:D<br>server.1=192.168.1.131:2881:3881<br>server.2=192.168.1.132:2881:3881<br>server.3=192.168.1.133:2881:3881<br>A 是一个数字，表示这个是第几号服务器；<br>B 是这个服务器的IP地址（或者是与IP地址做了映射的主机名）；<br>C 第一个端口用来集群成员的信息交换，表示这个服务器与集群中的Leader服务器交换信息的端口；<br>D 是在Leader挂掉时专门用来进行选举Leader所用的端口。</p>
+</li>
+</ul>
+<h2 id="创建myid文件"><a href="#创建myid文件" class="headerlink" title="创建myid文件"></a>创建myid文件</h2><p>在dataDir=/zhangqin/data/zookeeper目录下创建myid文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /zhangqin/logs/zookeeper</span><br><span class="line">$ mkdir /zhangqin/data/zookeeper</span><br><span class="line">$ vi /zhangqin/data/zookeeper/myid</span><br><span class="line">X</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ firewall-cmd --permanent --zone=public --add-port=2181/tcp</span><br><span class="line">$ firewall-cmd --permanent --zone=public --add-port=2881/tcp</span><br><span class="line">$ firewall-cmd --permanent --zone=public --add-port=3881/tcp</span><br><span class="line">$ firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h2 id="启动并测试ZooKeeper"><a href="#启动并测试ZooKeeper" class="headerlink" title="启动并测试ZooKeeper"></a>启动并测试ZooKeeper</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cd /zhangqin/appserver/zookeeper-3.4.6/bin/</span><br><span class="line">$ ./zkServer.sh start</span><br><span class="line">JMX enabled by default</span><br><span class="line">Using config: /zhangqin/appserver/zookeeper-3.4.6/bin/../conf/zoo.cfg</span><br><span class="line">Starting zookeeper ... STARTED</span><br></pre></td></tr></table></figure>
+<h3 id="jps命令查看进程"><a href="#jps命令查看进程" class="headerlink" title="jps命令查看进程"></a>jps命令查看进程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ jps</span><br><span class="line">10544 Jps</span><br><span class="line">10490 QuorumPeerMain</span><br></pre></td></tr></table></figure>
+<p>其中QuorumPeerMain为ZooKeeper进程，说明启动正常。</p>
+<h3 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a>查看状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./zkServer.sh status</span><br><span class="line">JMX enabled by default</span><br><span class="line">Using config: /zhangqin/appserver/zookeeper-3.4.6/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br></pre></td></tr></table></figure>
+<h2 id="配置开机启动"><a href="#配置开机启动" class="headerlink" title="配置开机启动"></a>配置开机启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cd /etc/init.d/</span><br><span class="line">$ vi zookeeper</span><br><span class="line">#!/bin/bash</span><br><span class="line"># chkconfig:2345 10 90</span><br><span class="line"># description:zookeeper</span><br><span class="line"># processname:zookeeper</span><br><span class="line">export JAVA_HOME=/zhangqin/appserver/jdk1.8.0_101</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">case $1 in</span><br><span class="line">          start) su root /zhangqin/appserver/zookeeper-3.4.6/bin/zkServer.sh start;;</span><br><span class="line">          stop) su root /zhangqin/appserver/zookeeper-3.4.6/bin/zkServer.sh stop;;</span><br><span class="line">          status) su root /zhangqin/appserver/zookeeper-3.4.6/bin/zkServer.sh status;;</span><br><span class="line">          restart) su root /zhangqin/appserver/zookeeper-3.4.6/bin/zkServer.sh restart;;</span><br><span class="line">          *) echo &quot;require start|stop|status|restart&quot;;;</span><br><span class="line">esac</span><br><span class="line">$ chmod +x zookeeper</span><br></pre></td></tr></table></figure>
+<p>这个时候我们就可以用service zookeeper start/stop来启动停止zookeeper服务了。使用chkconfig –add zookeeper命令把zookeeper添加到开机启动里面。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ chkconfig --add zookeeper</span><br><span class="line">$ chkconfig --list</span><br><span class="line"></span><br><span class="line">注意：该输出结果只显示 SysV 服务，并不包含原生 systemd 服务。SysV 配置数据可能被原生 systemd 配置覆盖。</span><br><span class="line">      如果您想列出 systemd 服务,请执行 &apos;systemctl list-unit-files&apos;。</span><br><span class="line">      欲查看对特定 target 启用的服务请执行</span><br><span class="line">      &apos;systemctl list-dependencies [target]&apos;。</span><br><span class="line"></span><br><span class="line">zookeeper          0:关    1:关    2:开    3:开    4:开    5:开    6:关</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/" data-id="cjjz241e300061e3fs7t6p76y" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Zookeeper/">Zookeeper</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/19/Linux文件上传下载（rz、sz）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Linux文件上传下载（rz、sz）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/16/虚拟机规划/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">虚拟机规划</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA基础/">JAVA基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/基于Dubbo的分布式系统架构实战/">基于Dubbo的分布式系统架构实战</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM/">JVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM-垃圾回收/">JVM 垃圾回收</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RZ-SZ/">RZ/SZ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Zookeeper/">Zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JVM/" style="font-size: 20px;">JVM</a> <a href="/tags/JVM-垃圾回收/" style="font-size: 10px;">JVM 垃圾回收</a> <a href="/tags/RZ-SZ/" style="font-size: 10px;">RZ/SZ</a> <a href="/tags/Zookeeper/" style="font-size: 10px;">Zookeeper</a> <a href="/tags/虚拟化/" style="font-size: 10px;">虚拟化</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/20/Dubbo管理控制台的安装/">Dubbo管理控制台的安装</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/19/CentOS安装JDK8/">CentOS7安装JDK8</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/19/Linux文件上传下载（rz、sz）/">Linux文件上传下载（rz、sz）</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/">ZooKeeper集群的安装、配置、高可用测试</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/16/虚拟机规划/">虚拟机规划</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 张亲<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
