@@ -5,18 +5,20 @@
   
 
   
-  <title>JAVA技术图谱 | 张亲的技术博客</title>
+  <title>Zookeeper分布式配置中心 | 张亲的技术博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA技术图谱">
-<meta property="og:url" content="http://yoursite.com/2018/07/09/JAVA技术图谱/index.html">
+  <meta name="description" content="开源的分布式配置中心Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。然而，Apollo是依赖Eureka的，目前Eureka 2.0 版本的开源工作已经停止。本人Fork了此项目，计划将Apollo依赖服务发现注册中心改为Zookeeper。点击地址一">
+<meta name="keywords" content="Zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper分布式配置中心">
+<meta property="og:url" content="http://yoursite.com/2018/07/24/Zookeeper分布式配置中心/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="开源的分布式配置中心Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。然而，Apollo是依赖Eureka的，目前Eureka 2.0 版本的开源工作已经停止。本人Fork了此项目，计划将Apollo依赖服务发现注册中心改为Zookeeper。点击地址一">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/images/其他/JAVA技术图谱.png">
-<meta property="og:updated_time" content="2018-07-09T10:40:31.873Z">
+<meta property="og:updated_time" content="2018-07-24T02:39:29.632Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA技术图谱">
-<meta name="twitter:image" content="http://yoursite.com/images/其他/JAVA技术图谱.png">
+<meta name="twitter:title" content="Zookeeper分布式配置中心">
+<meta name="twitter:description" content="开源的分布式配置中心Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。然而，Apollo是依赖Eureka的，目前Eureka 2.0 版本的开源工作已经停止。本人Fork了此项目，计划将Apollo依赖服务发现注册中心改为Zookeeper。点击地址一">
   
     <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
   
@@ -63,14 +65,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-JAVA技术图谱" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Zookeeper分布式配置中心" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/07/09/JAVA技术图谱/" class="article-date">
-  <time datetime="2018-07-09T10:01:24.000Z" itemprop="datePublished">2018-07-09</time>
+    <a href="/2018/07/24/Zookeeper分布式配置中心/" class="article-date">
+  <time datetime="2018-07-24T02:13:11.000Z" itemprop="datePublished">2018-07-24</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/其他/">其他</a>
+    <a class="article-category-link" href="/categories/基于Dubbo的分布式系统架构实战/">基于Dubbo的分布式系统架构实战</a>
   </div>
 
   </div>
@@ -81,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      JAVA技术图谱
+      Zookeeper分布式配置中心
     </h1>
   
 
@@ -89,33 +91,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="/images/其他/JAVA技术图谱.png" alt="JAVA技术图谱" title="JAVA技术图谱"></p>
+        <h1 id="开源的分布式配置中心"><a href="#开源的分布式配置中心" class="headerlink" title="开源的分布式配置中心"></a>开源的分布式配置中心</h1><p><a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">Apollo（阿波罗）</a>是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。<br>然而，Apollo是依赖Eureka的，目前Eureka 2.0 版本的开源工作已经停止。本人Fork了此项目，计划将Apollo依赖服务发现注册中心改为Zookeeper。<a href="https://github.com/zhangqin-repo/apollo" target="_blank" rel="noopener">点击地址</a>一同学习交流。</p>
+<a id="more"></a>
+<p><a href="https://github.com/knightliao/disconf" target="_blank" rel="noopener">Disconf（分布式配置管理平台）</a>，专注于各种分布式系统配置管理 的通用组件/通用平台, 提供统一的配置管理服务，是一套完整的基于zookeeper的分布式配置统一解决方案。由百度开源，本人并未使用过。</p>
+<h1 id="基于Zookeeper的轻量级分布式配置中心"><a href="#基于Zookeeper的轻量级分布式配置中心" class="headerlink" title="基于Zookeeper的轻量级分布式配置中心"></a>基于Zookeeper的轻量级分布式配置中心</h1><p>携程的Apollo已经非常强大，但是小公司或者项目规模不太大用着有些暴殄天物，我之前的公司也有开发一个超级轻量级的配置中心，我将参照这个版本开发一版本，这篇博客后面会写一些设计思路方案。而这个系统地址如下，也欢迎大家一起学习交流。<br><a href="https://github.com/zhangqin-repo/zhangqin-zkconf-web" target="_blank" rel="noopener">轻量级分布式配置中心</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/09/JAVA技术图谱/" data-id="cjjz2j6p80005563fsqnmcsnp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/24/Zookeeper分布式配置中心/" data-id="cjjz2j6pf000c563f9st20gq0" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Zookeeper/">Zookeeper</a></li></ul>
+
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2018/07/10/JVM的内存区域划分/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          JVM的内存区域划分
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/07/04/使用hexo-github搭建免费个人博客/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/07/20/Dubbo管理控制台的安装/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">使用hexo+github搭建免费个人博客</div>
+      <div class="article-nav-title">Dubbo管理控制台的安装</div>
     </a>
   
 </nav>
