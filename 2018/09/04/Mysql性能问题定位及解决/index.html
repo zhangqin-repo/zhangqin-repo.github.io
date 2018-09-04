@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Mysql性能问题定位及解决 | 张亲的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 定位数据库性能问题1.1 命令定位show processlist用于显示哪些线程正在运行。如果您root权限，您可以看到所有线程。否则，您只能看到登录的用户自己的线程，通常只会显示100条如果想看跟多的可以使用full修饰show full processlist;">
+<meta name="keywords" content="Mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql性能问题定位及解决">
+<meta property="og:url" content="http://yoursite.com/2018/09/04/Mysql性能问题定位及解决/index.html">
+<meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="1. 定位数据库性能问题1.1 命令定位show processlist用于显示哪些线程正在运行。如果您root权限，您可以看到所有线程。否则，您只能看到登录的用户自己的线程，通常只会显示100条如果想看跟多的可以使用full修饰show full processlist;">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/Mysql/mysql_show_full_processlist.png">
+<meta property="og:updated_time" content="2018-09-04T10:55:21.537Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql性能问题定位及解决">
+<meta name="twitter:description" content="1. 定位数据库性能问题1.1 命令定位show processlist用于显示哪些线程正在运行。如果您root权限，您可以看到所有线程。否则，您只能看到登录的用户自己的线程，通常只会显示100条如果想看跟多的可以使用full修饰show full processlist;">
+<meta name="twitter:image" content="http://yoursite.com/images/Mysql/mysql_show_full_processlist.png">
+  
+    <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">张亲的技术博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Mysql性能问题定位及解决" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/04/Mysql性能问题定位及解决/" class="article-date">
+  <time datetime="2018-09-04T09:53:31.000Z" itemprop="datePublished">2018-09-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mysql性能问题定位及解决
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-定位数据库性能问题"><a href="#1-定位数据库性能问题" class="headerlink" title="1. 定位数据库性能问题"></a>1. 定位数据库性能问题</h1><h2 id="1-1-命令定位"><a href="#1-1-命令定位" class="headerlink" title="1.1 命令定位"></a>1.1 命令定位</h2><p><code>show processlist</code>用于显示哪些线程正在运行。如果您root权限，您可以看到所有线程。否则，您只能看到登录的用户自己的线程，通常只会显示100条如果想看跟多的可以使用full修饰<code>show full processlist</code>;</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;show full processlist;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/Mysql/mysql_show_full_processlist.png" alt="show processlist" title="show processlist"></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>ID标识，要kill一个语句的时候很有用</td>
+</tr>
+<tr>
+<td>use</td>
+<td>当前连接用户</td>
+</tr>
+<tr>
+<td>host</td>
+<td>显示这个连接从哪个ip的哪个端口上发出</td>
+</tr>
+<tr>
+<td>db</td>
+<td>数据库名</td>
+</tr>
+<tr>
+<td>command</td>
+<td>连接状态，一般是休眠（sleep），查询（query），连接（connect）</td>
+</tr>
+<tr>
+<td>time</td>
+<td>连接持续时间，单位是秒</td>
+</tr>
+<tr>
+<td>state</td>
+<td>显示当前sql语句的状态</td>
+</tr>
+<tr>
+<td>info</td>
+<td>显示这个sql语句</td>
+</tr>
+</tbody>
+</table>
+<p>其中state的状态十分关键，下表列出state主要状态和描述：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Locked</td>
+<td>被其他查询锁住了。</td>
+</tr>
+<tr>
+<td>Sending data</td>
+<td>正在处理SELECT查询的记录，同时正在把结果发送给客户端。</td>
+</tr>
+<tr>
+<td>Sleeping</td>
+<td>正在等待客户端发送新请求.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-2-慢查询日志定位"><a href="#1-2-慢查询日志定位" class="headerlink" title="1.2 慢查询日志定位"></a>1.2 慢查询日志定位</h2><p><code>TODO</code></p>
+<h1 id="2-分析数据库性能问题"><a href="#2-分析数据库性能问题" class="headerlink" title="2. 分析数据库性能问题"></a>2. 分析数据库性能问题</h1><h2 id="2-1-explain-执行分析计划"><a href="#2-1-explain-执行分析计划" class="headerlink" title="2.1 explain 执行分析计划"></a>2.1 explain 执行分析计划</h2><p>TODO</p>
+<h2 id="2-2-show-profile-命令分析"><a href="#2-2-show-profile-命令分析" class="headerlink" title="2.2 show profile 命令分析"></a>2.2 show profile 命令分析</h2><p>TODO</p>
+<h2 id="2-3-show-status-命令分析"><a href="#2-3-show-status-命令分析" class="headerlink" title="2.3 show status 命令分析"></a>2.3 show status 命令分析</h2><p>TODO</p>
+<h1 id="3-解决数据库性能问题"><a href="#3-解决数据库性能问题" class="headerlink" title="3. 解决数据库性能问题"></a>3. 解决数据库性能问题</h1><h2 id="3-1-数据库建模规范"><a href="#3-1-数据库建模规范" class="headerlink" title="3.1 数据库建模规范"></a>3.1 数据库建模规范</h2><h3 id="3-1-1-数据库字符集选择"><a href="#3-1-1-数据库字符集选择" class="headerlink" title="3.1.1 数据库字符集选择"></a>3.1.1 数据库字符集选择</h3><p>非面向国际化的系统数据库应使用GBK字符集（双字节表示一个汉字），而不应该使用UTF-8字符集（三个字节表示一个汉字）</p>
+<h3 id="3-1-2-数据长度选择"><a href="#3-1-2-数据长度选择" class="headerlink" title="3.1.2 数据长度选择"></a>3.1.2 数据长度选择</h3><p>应根据业务需求选择合适的字段长度，不应大幅过长</p>
+<h3 id="3-1-3-主键、外键、约束"><a href="#3-1-3-主键、外键、约束" class="headerlink" title="3.1.3 主键、外键、约束"></a>3.1.3 主键、外键、约束</h3><p>每个表强制性必须要有主键<br>不应使用外键，外键由程序端维护数据一致性（考虑外键更新成本）<br>能建立唯一约束、非空约束的必须建立对应约束</p>
+<h3 id="3-1-4-数据类型选择"><a href="#3-1-4-数据类型选择" class="headerlink" title="3.1.4 数据类型选择"></a>3.1.4 数据类型选择</h3><p>能以数值类型存储的必须以数值类型存储，能以时间类型存储必须以时间类型存储，剩余的考虑使用字符串类型</p>
+<h4 id="整数类型（原则：尽量使用无符号的，尽量使用占用空间小的类型）"><a href="#整数类型（原则：尽量使用无符号的，尽量使用占用空间小的类型）" class="headerlink" title="整数类型（原则：尽量使用无符号的，尽量使用占用空间小的类型）"></a>整数类型（原则：尽量使用无符号的，尽量使用占用空间小的类型）</h4><table>
+<thead>
+<tr>
+<th>数据库类型</th>
+<th>有符号取值范围</th>
+<th>无符号取值范围</th>
+<th>占用存储空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tinyint</td>
+<td>-128至127</td>
+<td>0至255</td>
+<td>1个字节</td>
+</tr>
+<tr>
+<td>smallint</td>
+<td>-32768至32767</td>
+<td>0至65535</td>
+<td>2个字节</td>
+</tr>
+<tr>
+<td>mediumint</td>
+<td>-8388608至8388607</td>
+<td>0至16777215</td>
+<td>3个字节</td>
+</tr>
+<tr>
+<td>int</td>
+<td>-2147483648至2147483647</td>
+<td>0至4294967295</td>
+<td>4个字节</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>-9223372036854775808至9223372036854775807</td>
+<td>0至18446744073709551615</td>
+<td>8个字节</td>
+</tr>
+</tbody>
+</table>
+<h4 id="字符串类型（原则：MYisam引擎可以使用CHAR字符类型，InnoDB引擎不应该使用CHAR数据类型应使用VARCHAR数据类型代替）"><a href="#字符串类型（原则：MYisam引擎可以使用CHAR字符类型，InnoDB引擎不应该使用CHAR数据类型应使用VARCHAR数据类型代替）" class="headerlink" title="字符串类型（原则：MYisam引擎可以使用CHAR字符类型，InnoDB引擎不应该使用CHAR数据类型应使用VARCHAR数据类型代替）"></a>字符串类型（原则：MYisam引擎可以使用CHAR字符类型，InnoDB引擎不应该使用CHAR数据类型应使用VARCHAR数据类型代替）</h4><h4 id="时间类型（原则：尽量选择占用空间小的子类型，不需要存储1970年以后的日期都应选择TIMESTAMP类型，比如CREATE-TIME、UPDATE-TIME）"><a href="#时间类型（原则：尽量选择占用空间小的子类型，不需要存储1970年以后的日期都应选择TIMESTAMP类型，比如CREATE-TIME、UPDATE-TIME）" class="headerlink" title="时间类型（原则：尽量选择占用空间小的子类型，不需要存储1970年以后的日期都应选择TIMESTAMP类型，比如CREATE_TIME、UPDATE_TIME）"></a>时间类型（原则：尽量选择占用空间小的子类型，不需要存储1970年以后的日期都应选择TIMESTAMP类型，比如CREATE_TIME、UPDATE_TIME）</h4><h3 id="3-1-5-字段拆分"><a href="#3-1-5-字段拆分" class="headerlink" title="3.1.5 字段拆分"></a>3.1.5 字段拆分</h3><p>TEXT 、MEDIUMTEXT、LONGTEXT 等数据类型应拆分为单独一张表，以提高DML的效率</p>
+<h3 id="3-1-6-范式和反范式与多表关联性能权衡"><a href="#3-1-6-范式和反范式与多表关联性能权衡" class="headerlink" title="3.1.6 范式和反范式与多表关联性能权衡"></a>3.1.6 范式和反范式与多表关联性能权衡</h3><p>1、能不单独拆分表的尽量不拆分，一对多、多对多关系除外<br>2、范式遵循应控制在3张表关联之内</p>
+<h2 id="3-2-索引"><a href="#3-2-索引" class="headerlink" title="3.2 索引"></a>3.2 索引</h2><p>1、应在WHERE限制条件的字段、表关联字段、排序字段、分组字段建立索引<br>2、不应过度索引，比如在第一点列出的字段外建立索引<br>3、不应重复在相同字段建立索引<br>4、应在基数大重复值少的字段建立索引，不能在基数小重复值多的字段建立索引<br>5、能建立唯一索引的必须建立唯一索引<br>6、使用短索引提高索引效率<br>Id<br>10001<br>10101<br>10201<br>10301<br>10401<br>10501<br>……<br>在此ID上建立索引: create index idx_tab on (id(3)),  前三个字符就已足够使用字段唯一基数最大了</p>
+<p>7、索引字段使用函数、表达式的导致索引失效，例如：id + 2 = 100 、lower(name) = ‘jimmy’ 导致WHERE字段不能使用索引<br>8、使用IS NULL导致索引失效，例如：where name is null 导致不能使用到索引<br>9、隐式转换可能导致不能使用到索引，例如 where id = ‘1’ 或 where a.id = CAST(b.id AS CHAR)，所以在设计表时应注意表关联字段必须为同一类型，传入的查询值也必须和字段类型相同<br>10、like模糊查询%后匹配可以使用到索引，%前匹配不能使用到索引，例如：name like ‘%jimmy%’ 和 name like ‘%jimmy’ 不能使用到索引，name like ‘jimmy%’ 可以使用到索引，一定要使用前匹配请使用搜索引擎实现<br>11、复合索引查询时一定要带前导列才能使用到索引，<br>例如：create index idx_user on (id,name,age)<br>查询1：select x from user where id =1<br>查询2：select x from user where id =1 and name = ‘jimmy’<br>查询3：select x from user where id =1 and age=18<br>查询4：select x from user where id =1 and name=’jimmy’ and age=18<br>可以使用到索引。<br>查询5：select x from user where name = ‘jimmy’<br>查询6：select x from user where age=18<br>查询7：select x from user where name = ‘jimmy’ and age=18</p>
+<h2 id="3-3-分区"><a href="#3-3-分区" class="headerlink" title="3.3 分区"></a>3.3 分区</h2><p>分区表优势：<br>1、改善查询性能：对分区对象的查询可以仅搜索自己关心的分区，提高检索速度。<br>2、增强可用性：如果表的某个分区出现故障，表在其他分区的数据仍然可用；<br>3、均衡I/O：可以把不同的分区映射到不同磁盘以平衡I/O，改善整个系统性能。</p>
+<h3 id="3-3-1-Range分区"><a href="#3-3-1-Range分区" class="headerlink" title="3.3.1 Range分区"></a>3.3.1 Range分区</h3><p>CREATE TABLE <code>jxc_trade_order</code> (<br>  <code>id</code> varchar(32) NOT NULL COMMENT ‘主键ID’,<br>  <code>order_no</code> varchar(32) NOT NULL COMMENT ‘订单号生成规则(XS+5位店铺编码+2位POSID+6位日期+4位流水号)’,<br>  <code>store_id</code> varchar(32) NOT NULL COMMENT ‘店铺ID’,<br>  <code>pos_id</code> varchar(32) NOT NULL COMMENT ‘POS机ID’,<br>  <code>sale_type</code> char(1) NOT NULL COMMENT ‘订单类型(A:销售单,B:退货单)’,<br>  <code>order_resource</code> tinyint(4) DEFAULT NULL COMMENT ‘订单来源:(0:APP,1:微信,2:线下POS)’,<br>  <code>source</code> tinyint(4) DEFAULT NULL COMMENT ‘来源’,<br>  <code>total_amount</code> decimal(14,4) NOT NULL COMMENT ‘原价金额’,<br>  <code>amount</code> decimal(14,4) NOT NULL COMMENT ‘实际金额’,<br>  <code>discount_amount</code> decimal(14,4) NOT NULL COMMENT ‘店铺优惠（除平台优惠以外的优惠金额）’,<br>  <code>plat_discount_amount</code> decimal(14,4) NOT NULL COMMENT ‘平台优惠（除店铺优惠以外的优惠金额）’,<br>  <code>freight_amount</code> decimal(14,4) NOT NULL COMMENT ‘运费’,<br>  <code>user_id</code> varchar(100) DEFAULT NULL COMMENT ‘（会员）买家ID’,<br>  <code>point</code> int(11) DEFAULT ‘0’ COMMENT ‘订单积分’,<br>  <code>reference_no</code> varchar(20) DEFAULT NULL COMMENT ‘退货原单号’,<br>  <code>operator_id</code> varchar(32) DEFAULT NULL COMMENT ‘收银员ID’,<br>  <code>pick_up_code</code> varchar(32) DEFAULT NULL COMMENT ‘提货码’,<br>  <code>status</code> varchar(32) DEFAULT NULL COMMENT ‘订单状态(0:已完成,1:待支付,2:扫码支付中,3:扫码支付失败或取消)’,<br>  <code>remark</code> varchar(1000) DEFAULT NULL COMMENT ‘备注’,<br>  <code>disabled</code> tinyint(1) NOT NULL COMMENT ‘删除标识’,<br>  <code>creater_id</code> varchar(32) DEFAULT NULL COMMENT ‘创建人’,<br>  <code>create_time</code> datetime NOT NULL COMMENT ‘创建时间’,<br>  <code>complete_time</code> datetime DEFAULT NULL COMMENT ‘完成时间’,<br>PRIMARY KEY (<code>id</code>,create_time)</p>
+<p>)<br>PARTITION BY RANGE COLUMNS (create_time)<br>(<br>  PARTITION p2016 VALUES LESS THAN (‘2016-06-01’),<br>  PARTITION p201606 VALUES LESS THAN (‘2016-07-01’),<br>  PARTITION p201607 VALUES LESS THAN (‘2016-08-01’),<br>  PARTITION p201608 VALUES LESS THAN (‘2016-09-01’),<br>  PARTITION p201609 VALUES LESS THAN (‘2016-10-01’),<br>  PARTITION p201610 VALUES LESS THAN (‘2016-11-01’),<br>  PARTITION p201611 VALUES LESS THAN (‘2016-12-01’),<br>  PARTITION p201612 VALUES LESS THAN (‘2017-01-01’),<br>  PARTITION p201701 VALUES LESS THAN (‘2017-02-01’),<br>  PARTITION p201702 VALUES LESS THAN (‘2017-03-01’),<br>  PARTITION pmax VALUES LESS THAN (MAXVALUE)<br>)</p>
+<p>注意事项：<br>1、    分区字段一定要包含主键<br>2、    单表数据量达到500W以上时应使用分区表<br>3、    查询时一定要使用到分区字段才能分区裁剪，<br>例如：where create_time &gt;= ‘2017-02-01’ and create_time &lt; ‘2017-03-01’</p>
+<h3 id="3-3-2-List分区"><a href="#3-3-2-List分区" class="headerlink" title="3.3.2 List分区"></a>3.3.2 List分区</h3><p>CREATE TABLE <code>trade_order</code> (<br>  <code>id</code> varchar(32) NOT NULL COMMENT ‘主键ID’,<br>  <code>status</code> tinyint(1) DEFAULT NULL COMMENT ‘订单状态(0:等待买家付款,1:待发货,2:已取消,3:已发货,4:已拒收,5:已签收(交易完成),6:交易关闭)、7：待消费、8：部分消费、9：已消费、10：已过期、11:等待买家支付中、12：取消中、13:拒收中’,<br>  <code>total_amount</code> decimal(14,2) NOT NULL DEFAULT ‘0.00’ COMMENT ‘订单总金额’,<br>  <code>actual_amount</code> decimal(14,2) NOT NULL DEFAULT ‘0.00’ COMMENT ‘实付金额’,<br>  <code>preferential_price</code> decimal(14,2) NOT NULL DEFAULT ‘0.00’ COMMENT ‘优惠金额’,<br>  <code>fare</code> decimal(14,2) NOT NULL DEFAULT ‘0.00’ COMMENT ‘运费’,<br>  <code>user_phone</code> varchar(32) DEFAULT NULL COMMENT ‘买家手机号码’,<br>  <code>user_id</code> varchar(100) DEFAULT NULL COMMENT ‘买家ID’,<br>  <code>store_name</code> varchar(32) DEFAULT NULL COMMENT ‘店铺名称’,<br>  <code>seller_id</code> varchar(32) DEFAULT NULL COMMENT ‘卖家ID(店员、店长、商家)’,<br>  <code>store_id</code> varchar(32) NOT NULL COMMENT ‘店铺ID’,<br>  <code>pid</code> varchar(32) NOT NULL DEFAULT ‘0’ COMMENT ‘父订单ID’,<br>  <code>order_no</code> varchar(32) NOT NULL COMMENT ‘订单号生成规则(XS+6位日期+8位流水号)’,<br>  <code>type</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘订单类型(0:实物订单,1:团购店服务订单，2:上门服务订单，3：手机充值，4：流量充值，5：到店消费订单)’,<br>  <code>pick_up_type</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘提货类型(0:送货上门,1:到店自提)’,<br>  <code>pick_up_code</code> varchar(32) DEFAULT NULL COMMENT ‘提货码’,<br>  <code>pick_up_time</code> varchar(64) DEFAULT NULL COMMENT ‘买家(送货时间)卖家(自提时间)’,<br>  <code>activity_type</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘活动类型(0:没参加活动,1:代金券,2:满减活动,3:满折活动,4:团购活动5:特惠活动6:秒杀活动)’,<br>  <code>activity_id</code> varchar(32) NOT NULL DEFAULT ‘0’ COMMENT ‘活动ID,0：没参加活动’,<br>  <code>remark</code> varchar(1000) DEFAULT NULL COMMENT ‘备注’,<br>  <code>invoice</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘有无发票(0:无,1:有)’,<br>  <code>disabled</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘删除标识’,<br>  <code>create_time</code> datetime NOT NULL COMMENT ‘创建时间’,<br>  <code>update_time</code> datetime NOT NULL COMMENT ‘修改时间’,<br>  <code>payment_status</code> tinyint(4) DEFAULT ‘0’ COMMENT ‘回款状态(0:待回款,1:已回款)’,<br>  <code>order_resource</code> tinyint(4) DEFAULT ‘0’ COMMENT ‘订单来源:(0:云上城App,1:微信,2:POS机)’,<br>  <code>received_time</code> datetime DEFAULT NULL COMMENT ‘收货时间’,<br>  <code>delivery_time</code> datetime DEFAULT NULL COMMENT ‘发货时间’,<br>  <code>pick_up_id</code> varchar(32) DEFAULT NULL COMMENT ‘送货地址ID’,<br>  <code>pay_way</code> tinyint(1) DEFAULT NULL COMMENT ‘支付方式:(0:在线支付、1:货到付款,2:未支付,3:线下支付,4:线下确认价格并当面支付)’,<br>  <code>properties_indb</code> varchar(1000) DEFAULT NULL COMMENT ‘SKU属性在数据库中的字符串表示’,<br>  <code>reason</code> varchar(255) DEFAULT NULL COMMENT ‘取消原因’,<br>  <code>payment_time</code> datetime DEFAULT NULL COMMENT ‘回款时间’,<br>  <code>income</code> decimal(14,2) DEFAULT NULL COMMENT ‘收入’,<br>  <code>is_show</code> tinyint(4) DEFAULT NULL COMMENT ‘订单是否显示(0:不显示,1:显示)’,<br>  <code>pospay</code> varchar(32) DEFAULT NULL COMMENT ‘pos订单支付方式’,<br>  <code>compain_status</code> tinyint(4) DEFAULT ‘0’ COMMENT ‘投诉(0:未投诉,1:已投诉)’,<br>  <code>pick_up_item</code> varchar(32) DEFAULT NULL COMMENT ‘时间字符串’,<br>  <code>trade_num</code> varchar(32) DEFAULT NULL COMMENT ‘订单唯一交易号’,<br>  <code>activity_item_id</code> varchar(64) DEFAULT NULL COMMENT ‘活动项ID’,<br>  <code>is_complete</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘订单是否已完成：0：否，1是’,<br>  <code>shipments_user_id</code> varchar(32) DEFAULT NULL COMMENT ‘发货人ID’,<br>  <code>consumer_code_status</code> tinyint(1) NOT NULL DEFAULT ‘0’ COMMENT ‘消费码状态 0：无 1：未消费 2：已过期 3：已退款 4：待评价 5：已完成’,<br>  <code>payment_user_id</code> varchar(32) DEFAULT NULL COMMENT ‘回款人ID’,<br>  <code>is_breach</code> tinyint(1) DEFAULT ‘0’ COMMENT ‘订单是否违约，0：否，1：是’,<br>  <code>is_breach_money</code> tinyint(1) DEFAULT ‘0’ COMMENT ‘店铺是否设置有违约金 0:否 1：有’,<br>  <code>breach_time</code> tinyint(4) DEFAULT NULL COMMENT ‘收取违约金的时间约束’,<br>  <code>breach_percent</code> tinyint(2) DEFAULT ‘0’ COMMENT ‘违约金百分比’,<br>  <code>breach_money</code> decimal(14,2) DEFAULT ‘0.00’ COMMENT ‘违约金’,<br>  <code>cancel_type</code> tinyint(1) DEFAULT ‘0’ COMMENT ‘0:历史取消，1：系统取消，2：用户取消，3：商家取消’,<br>  <code>accept_time</code> datetime DEFAULT NULL COMMENT ‘接单时间’,<br>  PRIMARY KEY (<code>id</code>,type)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=’交易订单表’<br>PARTITION BY LIST COLUMNS (type)<br>(<br>  PARTITION p0 VALUES IN (0),<br>  PARTITION p1 VALUES IN (1),<br>  PARTITION p2 VALUES IN (2),<br>  PARTITION p34 VALUES IN (3,4),<br>  PARTITION p5 VALUES IN (5)<br>); </p>
+<h3 id="3-3-3-Key分区"><a href="#3-3-3-Key分区" class="headerlink" title="3.3.3 Key分区"></a>3.3.3 Key分区</h3><p>CREATE TABLE <code>jxc_trade_order</code> (<br>  <code>id</code> varchar(32) NOT NULL COMMENT ‘主键ID’,<br>  <code>order_no</code> varchar(32) NOT NULL COMMENT ‘订单号生成规则(XS+5位店铺编码+2位POSID+6位日期+4位流水号)’,<br>  <code>store_id</code> varchar(32) NOT NULL COMMENT ‘店铺ID’,<br>  <code>pos_id</code> varchar(32) NOT NULL COMMENT ‘POS机ID’,<br>  <code>sale_type</code> char(1) NOT NULL COMMENT ‘订单类型(A:销售单,B:退货单)’,<br>  <code>order_resource</code> tinyint(4) DEFAULT NULL COMMENT ‘订单来源:(0:APP,1:微信,2:线下POS)’,<br>  <code>source</code> tinyint(4) DEFAULT NULL COMMENT ‘来源’,<br>  <code>total_amount</code> decimal(14,4) NOT NULL COMMENT ‘原价金额’,<br>  <code>amount</code> decimal(14,4) NOT NULL COMMENT ‘实际金额’,<br>  <code>discount_amount</code> decimal(14,4) NOT NULL COMMENT ‘店铺优惠（除平台优惠以外的优惠金额）’,<br>  <code>plat_discount_amount</code> decimal(14,4) NOT NULL COMMENT ‘平台优惠（除店铺优惠以外的优惠金额）’,<br>  <code>freight_amount</code> decimal(14,4) NOT NULL COMMENT ‘运费’,<br>  <code>user_id</code> varchar(100) DEFAULT NULL COMMENT ‘（会员）买家ID’,<br>  <code>point</code> int(11) DEFAULT ‘0’ COMMENT ‘订单积分’,<br>  <code>reference_no</code> varchar(20) DEFAULT NULL COMMENT ‘退货原单号’,<br>  <code>operator_id</code> varchar(32) DEFAULT NULL COMMENT ‘收银员ID’,<br>  <code>pick_up_code</code> varchar(32) DEFAULT NULL COMMENT ‘提货码’,<br>  <code>status</code> varchar(32) DEFAULT NULL COMMENT ‘订单状态(0:已完成,1:待支付,2:扫码支付中,3:扫码支付失败或取消)’,<br>  <code>remark</code> varchar(1000) DEFAULT NULL COMMENT ‘备注’,<br>  <code>disabled</code> tinyint(1) NOT NULL COMMENT ‘删除标识’,<br>  <code>creater_id</code> varchar(32) DEFAULT NULL COMMENT ‘创建人’,<br>  <code>create_time</code> datetime NOT NULL COMMENT ‘创建时间’,<br>  <code>complete_time</code> datetime DEFAULT NULL COMMENT ‘完成时间’,<br>PRIMARY KEY (<code>order_no</code>,id)<br>)<br>PARTITION BY LINEAR KEY (order_no)<br>PARTITIONS 32;</p>
+<h2 id="3-4-多表关联"><a href="#3-4-多表关联" class="headerlink" title="3.4 多表关联"></a>3.4 多表关联</h2><p>多表关联最优原则：<br>1、    表关联次数越少效率越高<br>2、    驱动表是所有表中过滤完后记录最少的那个<br>3、    驱动表过滤完后的记录要比被驱动表的记录少<br>4、    以减少循环次数为优化目标<br>5、    被驱动表关联字段一定要有索引</p>
+<h2 id="3-5-HINT"><a href="#3-5-HINT" class="headerlink" title="3.5 HINT"></a>3.5 HINT</h2><p>TODO</p>
+<h2 id="3-6-数据库锁"><a href="#3-6-数据库锁" class="headerlink" title="3.6 数据库锁"></a>3.6 数据库锁</h2><p>TODO</p>
+<h2 id="3-7-SQL编写规范"><a href="#3-7-SQL编写规范" class="headerlink" title="3.7 SQL编写规范"></a>3.7 SQL编写规范</h2><p>TODO</p>
+<h2 id="3-8-读写分离"><a href="#3-8-读写分离" class="headerlink" title="3.8 读写分离"></a>3.8 读写分离</h2><p>1、当数据库负载达到2时或数据量超过1个亿应使用读写分离策略<br>2、读写分离策略解决性能问题最简单、迅速，架构改动最少，水平拓展最容易<br>3、Mysql读写分离中需要关注主从延迟问题，对于数据延迟敏感的应用应强制读主库<br>4、非常适合读占最主要的业务类型的系统，不适合写占多数的系统</p>
+<h2 id="3-9-分库分表"><a href="#3-9-分库分表" class="headerlink" title="3.9 分库分表"></a>3.9 分库分表</h2><p>1、当数据库负载达到5时或数据量超过5个亿应使用分库分表策略<br>2、分库策略有垂直分库和水平分库：<br>垂直分库适用于模块之间耦合不太紧密系统，尽量避免大数据量跨库查询<br>水平分库适用于可以根据业务规则来分片的字段，例如：商家ID、省份ID<br>3、分库分表和读写分离可以同时使用</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/09/04/Mysql性能问题定位及解决/" data-id="cjlnjpn1s00078q3fhlsm1lmz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Swagger2多个包路径扫描匹配支持</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA基础/">JAVA基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/代码片段/">代码片段</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/基于Dubbo的分布式系统架构实战/">基于Dubbo的分布式系统架构实战</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM/">JVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RZ-SZ/">RZ/SZ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swagger2/">Swagger2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Zookeeper/">Zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/RZ-SZ/" style="font-size: 10px;">RZ/SZ</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Swagger2/" style="font-size: 10px;">Swagger2</a> <a href="/tags/Zookeeper/" style="font-size: 10px;">Zookeeper</a> <a href="/tags/虚拟化/" style="font-size: 10px;">虚拟化</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/04/Mysql性能问题定位及解决/">Mysql性能问题定位及解决</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/">Swagger2多个包路径扫描匹配支持</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/24/Redis分布式锁实现/">Redis分布式锁实现</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/20/Dubbo管理控制台的安装/">Dubbo管理控制台的安装</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/19/CentOS安装JDK8/">CentOS7安装JDK8</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 张亲<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
