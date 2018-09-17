@@ -5,15 +5,19 @@
   
 
   
-  <title>Archives: 2018/9 | 张亲的技术博客</title>
+  <title>GitLab安装部署文档 | 张亲的技术博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="张亲的技术博客">
-<meta property="og:url" content="http://yoursite.com/archives/2018/09/index.html">
+  <meta name="description" content="环境CentOS 7.4 安装安装依赖软件yum -y install policycoreutils openssh-server openssh-clients policycoreutils-python postfix 设置postfix开机自启，并启动systemctl enable postfix &amp;amp;&amp;amp; systemctl start postfix 下载gitlab并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitLab安装部署文档">
+<meta property="og:url" content="http://yoursite.com/2018/09/11/GitLab安装部署文档/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="环境CentOS 7.4 安装安装依赖软件yum -y install policycoreutils openssh-server openssh-clients policycoreutils-python postfix 设置postfix开机自启，并启动systemctl enable postfix &amp;amp;&amp;amp; systemctl start postfix 下载gitlab并">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-11T05:39:29.358Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="张亲的技术博客">
+<meta name="twitter:title" content="GitLab安装部署文档">
+<meta name="twitter:description" content="环境CentOS 7.4 安装安装依赖软件yum -y install policycoreutils openssh-server openssh-clients policycoreutils-python postfix 设置postfix开机自启，并启动systemctl enable postfix &amp;amp;&amp;amp; systemctl start postfix 下载gitlab并">
   
     <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
   
@@ -60,97 +64,68 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/17/亲邻Java开发手册/" class="archive-article-date">
-  <time datetime="2018-09-17T04:04:08.000Z" itemprop="datePublished">Sep 17</time>
+        <section id="main"><article id="post-GitLab安装部署文档" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/11/GitLab安装部署文档/" class="article-date">
+  <time datetime="2018-09-11T04:57:28.000Z" itemprop="datePublished">2018-09-11</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/17/亲邻Java开发手册/">亲邻Java开发手册</a>
+    <h1 class="article-title" itemprop="name">
+      GitLab安装部署文档
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/11/使用Nexus搭建Maven私服/" class="archive-article-date">
-  <time datetime="2018-09-11T05:41:30.000Z" itemprop="datePublished">Sep 11</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/11/使用Nexus搭建Maven私服/">使用Nexus搭建Maven私服</a>
-    </h1>
-  
+        <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>CentOS 7.4</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装依赖软件"><a href="#安装依赖软件" class="headerlink" title="安装依赖软件"></a>安装依赖软件</h2><p><code>yum -y install policycoreutils openssh-server openssh-clients policycoreutils-python postfix</code></p>
+<h2 id="设置postfix开机自启，并启动"><a href="#设置postfix开机自启，并启动" class="headerlink" title="设置postfix开机自启，并启动"></a>设置postfix开机自启，并启动</h2><p><code>systemctl enable postfix &amp;&amp; systemctl start postfix</code></p>
+<h2 id="下载gitlab并安装"><a href="#下载gitlab并安装" class="headerlink" title="下载gitlab并安装"></a>下载gitlab并安装</h2><p>不同版本下载地址<a href="https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/</a><br><code>wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-11.2.3-ce.0.el7.x86_64.rpm
+rpm -i gitlab-ce-11.2.3-ce.0.el7.x86_64.rpm</code></p>
+<h2 id="修改gitlab配置文件指定服务器ip和自定义端口"><a href="#修改gitlab配置文件指定服务器ip和自定义端口" class="headerlink" title="修改gitlab配置文件指定服务器ip和自定义端口"></a>修改gitlab配置文件指定服务器ip和自定义端口</h2><p>vi /etc/gitlab/gitlab.rb<br>external_url ‘<a href="http://47.93.36.217:9527&#39;" target="_blank" rel="noopener">http://47.93.36.217:9527&#39;</a></p>
+<h2 id="重置并启动"><a href="#重置并启动" class="headerlink" title="重置并启动"></a>重置并启动</h2><p>gitlab-ctl reconfigure<br>gitlab-ctl restart</p>
+<h2 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h2><p>$ firewall-cmd –permanent –zone=public –add-port=9527/tcp<br>$ firewall-cmd –reload</p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/11/GitLab安装部署文档/" class="archive-article-date">
-  <time datetime="2018-09-11T04:57:28.000Z" itemprop="datePublished">Sep 11</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/11/GitLab安装部署文档/">GitLab安装部署文档</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/04/Mysql性能问题定位及解决/" class="archive-article-date">
-  <time datetime="2018-09-04T09:53:31.000Z" itemprop="datePublished">Sep 4</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/09/11/GitLab安装部署文档/" data-id="cjm5x49ax0004ss3fylabq4ab" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/04/Mysql性能问题定位及解决/">Mysql性能问题定位及解决</a>
-    </h1>
-  
-
-    </header>
+      
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/11/使用Nexus搭建Maven私服/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用Nexus搭建Maven私服
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2018/09/04/Mysql性能问题定位及解决/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Mysql性能问题定位及解决</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
