@@ -7,18 +7,18 @@
   
   <title>简单使用setNX命令封装分布式锁的缺陷 | 张亲的技术博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。 1.不具备可重入性在执行setnx命">
+  <meta name="description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单使用setNX命令封装分布式锁的缺陷">
 <meta property="og:url" content="http://yoursite.com/2018/11/14/简单使用setNX命令封装分布式锁的缺陷/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
-<meta property="og:description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。 1.不具备可重入性在执行setnx命">
+<meta property="og:description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-14T12:32:59.348Z">
+<meta property="og:updated_time" content="2018-11-14T12:33:52.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单使用setNX命令封装分布式锁的缺陷">
-<meta name="twitter:description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。 1.不具备可重入性在执行setnx命">
+<meta name="twitter:description" content="缺陷分析对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《Redis分布式锁实现》,原理同样是基于setNX命令上的封装。阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路上Redisson的作者提出了这种方式的不足。">
   
     <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
   
@@ -88,6 +88,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="缺陷分析"><a href="#缺陷分析" class="headerlink" title="缺陷分析"></a>缺陷分析</h1><p>对于Redis分布式锁的实现方式，网上讨论相关文章都基本都“烂大街”了。然而几乎所有相关介绍都是在单纯使用setNX命令的基础上进行一个简单封装。笔者之前也写了一篇《<a href="/2018/07/24/Redis分布式锁实现">Redis分布式锁实现</a>》,原理同样是基于setNX命令上的封装。<a href="https://yq.aliyun.com/articles/603575?utm_content=m_1000003526" target="_blank" rel="noopener">阿里云专访Redisson作者Rui Gu：构建开源企业级Redis客户端之路</a>上Redisson的作者提出了这种方式的不足。</p>
+<a id="more"></a>
 <h2 id="1-不具备可重入性"><a href="#1-不具备可重入性" class="headerlink" title="1.不具备可重入性"></a>1.不具备可重入性</h2><p>在执行setnx命令时，通常采用业务上指定的名称作为key名，用时间或随机值作为value来实现。这样的实现方式不具备追踪请求线程的能力，同时也不具备统计重入次数的能力，甚至有些实现方式都不具备操作的原子性。当遇到业务上需要在多个地方用到同样一个锁的时候，很显然使用不具有可重入的锁会很容易发生死锁的现象。特别是在有递归逻辑的场景里，发生死锁的几率会更高。Java并发工具包里的Lock对象和sychronized语块都具有可重入性，对于经常使用这些工具的人来说，往往会很容易忽略setnx的这个缺陷。</p>
 <h2 id="2-不支持续约"><a href="#2-不支持续约" class="headerlink" title="2.不支持续约"></a>2.不支持续约</h2><p>在分布式环境中，为了保证锁的活性和避免程序宕机造成的死锁现象，分布式锁往往会引入一个失效时间，超过这个时间则认为自动解锁。这样的设计前提是开发人员对这个自动解锁时间的粒度有一个很好的把握，太短了可能会出现任务没做完锁就失效了，而太长了在出现程序宕机或业务节点挂掉时，其它节点需要等很长时间才能恢复，而难以保证业务的SLA。setnx的设计缺乏一个延续有效期的续约机制，无法保证业务能够先工作做完再解锁，也不能确保在某个程序宕机或业务节点挂掉的时候，其它节点能够很快的恢复业务处理能力。</p>
 <h2 id="3-不具备阻塞的能力"><a href="#3-不具备阻塞的能力" class="headerlink" title="3.不具备阻塞的能力"></a>3.不具备阻塞的能力</h2><p>平常大家多少都接触过的锁，由于加锁策略（Locking Strategy）的差别，使得每种锁都有各自不同的特性。但是在通常情况下这些锁都具备两个共性：一是互斥性，二是阻塞性。互斥性是指在任何时刻最多只能有一个线程获得通行的资格。阻塞性是指的在有竞争的情况下，未获取到资源的线程会停止继续操作，直到成功获取到资源或取消操作。很显然setnx命令只提供了互斥的特性，却没有提供阻塞的能力。虽然在业务代码里可以引入自旋机制来进行再次获取，但这仅仅是把原本应该在锁里实现的功能搬到了业务代码里，通过增加业务代码的复杂程度来简化锁的实现似乎显得有点南辕北辙。</p>
