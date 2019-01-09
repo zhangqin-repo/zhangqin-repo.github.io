@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven全局配置文件settings.xml详解">
+<meta property="og:url" content="http://yoursite.com/2018/12/03/Maven全局配置文件settings-xml详解/index.html">
+<meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-03T03:23:23.811Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Maven全局配置文件settings.xml详解">
+<meta name="twitter:description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/03/Maven全局配置文件settings-xml详解/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Maven全局配置文件settings.xml详解 | 张亲的技术博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张亲的技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/03/Maven全局配置文件settings-xml详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张亲">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张亲的技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Maven全局配置文件settings.xml详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-12-03 10:57:11 / Modified: 11:23:23" itemprop="dateCreated datePublished" datetime="2018-12-03T10:57:11+08:00">2018-12-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h1><h2 id="settings-xml有什么用？"><a href="#settings-xml有什么用？" class="headerlink" title="settings.xml有什么用？"></a>settings.xml有什么用？</h2><p>如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。</p>
+<ul>
+<li>settings.xml文件是干什么的，为什么要配置它呢？<br>从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。</li>
+</ul>
+<p>Settings.xml中包含类似本地仓储位置、修改远程仓储服务器、认证信息等配置。</p>
+<h2 id="settings-xml文件位置"><a href="#settings-xml文件位置" class="headerlink" title="settings.xml文件位置"></a>settings.xml文件位置</h2><p>settings.xml文件一般存在于两个位置：<br>全局配置: ${M2_HOME}/conf/settings.xml<br>用户配置:<br>{user.home} 和和所有其他系统属性只能在3.0+版本上使用。请注意windows和Linux使用变量的区别。</p>
+<h2 id="配置优先级"><a href="#配置优先级" class="headerlink" title="配置优先级"></a>配置优先级</h2><p>需要注意的是：局部配置优先于全局配置。<br>配置优先级从高到低：pom.xml &gt; user settings &gt; global settings<br>如果这些文件同时存在，在应用配置时，会合并它们的内容，如果有重复的配置，优先级高的配置会覆盖优先级低的。</p>
+<h1 id="settings-xml元素详解"><a href="#settings-xml元素详解" class="headerlink" title="settings.xml元素详解"></a>settings.xml元素详解</h1><h2 id="顶级元素概览"><a href="#顶级元素概览" class="headerlink" title="顶级元素概览"></a>顶级元素概览</h2><p>下面列举了settings.xml中的顶级元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span><br><span class="line">      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">      xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                          https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;localRepository/&gt;</span><br><span class="line">  &lt;interactiveMode/&gt;</span><br><span class="line">  &lt;usePluginRegistry/&gt;</span><br><span class="line">  &lt;offline/&gt;</span><br><span class="line">  &lt;pluginGroups/&gt;</span><br><span class="line">  &lt;servers/&gt;</span><br><span class="line">  &lt;mirrors/&gt;</span><br><span class="line">  &lt;proxies/&gt;</span><br><span class="line">  &lt;profiles/&gt;</span><br><span class="line">  &lt;activeProfiles/&gt;</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="LocalRepository"><a href="#LocalRepository" class="headerlink" title="LocalRepository"></a>LocalRepository</h2><p>作用：该值表示构建系统本地仓库的路径。<br>其默认值：~/.m2/repository。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;localRepository&gt;$&#123;user.home&#125;/.m2/repository&lt;/localRepository&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="InteractiveMode"><a href="#InteractiveMode" class="headerlink" title="InteractiveMode"></a>InteractiveMode</h2><p>作用：表示maven是否需要和用户交互以获得输入。<br>如果maven需要和用户交互以获得输入，则设置成true，反之则应为false。默认为true。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;interactiveMode&gt;true&lt;/interactiveMode&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="UsePluginRegistry"><a href="#UsePluginRegistry" class="headerlink" title="UsePluginRegistry"></a>UsePluginRegistry</h2><p>作用：maven是否需要使用plugin-registry.xml文件来管理插件版本。<br>如果需要让maven使用文件~/.m2/plugin-registry.xml来管理插件版本，则设为true。默认为false。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;usePluginRegistry&gt;false&lt;/usePluginRegistry&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Offline"><a href="#Offline" class="headerlink" title="Offline"></a>Offline</h2><p>作用：表示maven是否需要在离线模式下运行。<br>如果构建系统需要在离线模式下运行，则为true，默认为false。<br>当由于网络设置原因或者安全因素，构建服务器不能连接远程仓库的时候，该配置就十分有用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;offline&gt;false&lt;/offline&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="PluginGroups"><a href="#PluginGroups" class="headerlink" title="PluginGroups"></a>PluginGroups</h2><p>作用：当插件的组织id（groupId）没有显式提供时，供搜寻插件组织Id（groupId）的列表。<br>该元素包含一个pluginGroup元素列表，每个子元素包含了一个组织Id（groupId）。<br>当我们使用某个插件，并且没有在命令行为其提供组织Id（groupId）的时候，Maven就会使用该列表。默认情况下该列表包含了org.apache.maven.plugins和org.codehaus.mojo。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  ...</span><br><span class="line">  &lt;pluginGroups&gt;</span><br><span class="line">    &lt;!--plugin的组织Id（groupId） --&gt;</span><br><span class="line">    &lt;pluginGroup&gt;org.codehaus.mojo&lt;/pluginGroup&gt;</span><br><span class="line">  &lt;/pluginGroups&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Servers"><a href="#Servers" class="headerlink" title="Servers"></a>Servers</h2><p>作用：一般，仓库的下载和部署是在pom.xml文件中的repositories和distributionManagement元素中定义的。然而，一般类似用户名、密码（有些仓库访问是需要安全认证的）等信息不应该在pom.xml文件中配置，这些信息可以配置在settings.xml中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  ...</span><br><span class="line">  &lt;!--配置服务端的一些设置。一些设置如安全证书不应该和pom.xml一起分发。这种类型的信息应该存在于构建服务器上的settings.xml文件中。 --&gt;</span><br><span class="line">  &lt;servers&gt;</span><br><span class="line">    &lt;!--服务器元素包含配置服务器时需要的信息 --&gt;</span><br><span class="line">    &lt;server&gt;</span><br><span class="line">      &lt;!--这是server的id（注意不是用户登陆的id），该id与distributionManagement中repository元素的id相匹配。 --&gt;</span><br><span class="line">      &lt;id&gt;server001&lt;/id&gt;</span><br><span class="line">      &lt;!--鉴权用户名。鉴权用户名和鉴权密码表示服务器认证所需要的登录名和密码。 --&gt;</span><br><span class="line">      &lt;username&gt;my_login&lt;/username&gt;</span><br><span class="line">      &lt;!--鉴权密码 。鉴权用户名和鉴权密码表示服务器认证所需要的登录名和密码。密码加密功能已被添加到2.1.0 +。详情请访问密码加密页面 --&gt;</span><br><span class="line">      &lt;password&gt;my_password&lt;/password&gt;</span><br><span class="line">      &lt;!--鉴权时使用的私钥位置。和前两个元素类似，私钥位置和私钥密码指定了一个私钥的路径（默认是$&#123;user.home&#125;/.ssh/id_dsa）以及如果需要的话，一个密语。将来passphrase和password元素可能会被提取到外部，但目前它们必须在settings.xml文件以纯文本的形式声明。 --&gt;</span><br><span class="line">      &lt;privateKey&gt;$&#123;usr.home&#125;/.ssh/id_dsa&lt;/privateKey&gt;</span><br><span class="line">      &lt;!--鉴权时使用的私钥密码。 --&gt;</span><br><span class="line">      &lt;passphrase&gt;some_passphrase&lt;/passphrase&gt;</span><br><span class="line">      &lt;!--文件被创建时的权限。如果在部署的时候会创建一个仓库文件或者目录，这时候就可以使用权限（permission）。这两个元素合法的值是一个三位数字，其对应了unix文件系统的权限，如664，或者775。 --&gt;</span><br><span class="line">      &lt;filePermissions&gt;664&lt;/filePermissions&gt;</span><br><span class="line">      &lt;!--目录被创建时的权限。 --&gt;</span><br><span class="line">      &lt;directoryPermissions&gt;775&lt;/directoryPermissions&gt;</span><br><span class="line">    &lt;/server&gt;</span><br><span class="line">  &lt;/servers&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Mirrors"><a href="#Mirrors" class="headerlink" title="Mirrors"></a>Mirrors</h2><p>作用：为仓库列表配置的下载镜像列表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  ...</span><br><span class="line">  &lt;mirrors&gt;</span><br><span class="line">    &lt;!-- 给定仓库的下载镜像。 --&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">      &lt;!-- 该镜像的唯一标识符。id用来区分不同的mirror元素。 --&gt;</span><br><span class="line">      &lt;id&gt;planetmirror.com&lt;/id&gt;</span><br><span class="line">      &lt;!-- 镜像名称 --&gt;</span><br><span class="line">      &lt;name&gt;PlanetMirror Australia&lt;/name&gt;</span><br><span class="line">      &lt;!-- 该镜像的URL。构建系统会优先考虑使用该URL，而非使用默认的服务器URL。 --&gt;</span><br><span class="line">      &lt;url&gt;http://downloads.planetmirror.com/pub/maven2&lt;/url&gt;</span><br><span class="line">      &lt;!-- 被镜像的服务器的id。例如，如果我们要设置了一个Maven中央仓库（http://repo.maven.apache.org/maven2/）的镜像，就需要将该元素设置成central。这必须和中央仓库的id central完全一致。 --&gt;</span><br><span class="line">      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">    &lt;/mirror&gt;</span><br><span class="line">  &lt;/mirrors&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Proxies"><a href="#Proxies" class="headerlink" title="Proxies"></a>Proxies</h2><p>作用：用来配置不同的代理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  ...</span><br><span class="line">  &lt;proxies&gt;</span><br><span class="line">    &lt;!--代理元素包含配置代理时需要的信息 --&gt;</span><br><span class="line">    &lt;proxy&gt;</span><br><span class="line">      &lt;!--代理的唯一定义符，用来区分不同的代理元素。 --&gt;</span><br><span class="line">      &lt;id&gt;myproxy&lt;/id&gt;</span><br><span class="line">      &lt;!--该代理是否是激活的那个。true则激活代理。当我们声明了一组代理，而某个时候只需要激活一个代理的时候，该元素就可以派上用处。 --&gt;</span><br><span class="line">      &lt;active&gt;true&lt;/active&gt;</span><br><span class="line">      &lt;!--代理的协议。 协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br><span class="line">      &lt;protocol&gt;http&lt;/protocol&gt;</span><br><span class="line">      &lt;!--代理的主机名。协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br><span class="line">      &lt;host&gt;proxy.somewhere.com&lt;/host&gt;</span><br><span class="line">      &lt;!--代理的端口。协议://主机名:端口，分隔成离散的元素以方便配置。 --&gt;</span><br><span class="line">      &lt;port&gt;8080&lt;/port&gt;</span><br><span class="line">      &lt;!--代理的用户名，用户名和密码表示代理服务器认证的登录名和密码。 --&gt;</span><br><span class="line">      &lt;username&gt;proxyuser&lt;/username&gt;</span><br><span class="line">      &lt;!--代理的密码，用户名和密码表示代理服务器认证的登录名和密码。 --&gt;</span><br><span class="line">      &lt;password&gt;somepassword&lt;/password&gt;</span><br><span class="line">      &lt;!--不该被代理的主机名列表。该列表的分隔符由代理服务器指定；例子中使用了竖线分隔符，使用逗号分隔也很常见。 --&gt;</span><br><span class="line">      &lt;nonProxyHosts&gt;*.google.com|ibiblio.org&lt;/nonProxyHosts&gt;</span><br><span class="line">    &lt;/proxy&gt;</span><br><span class="line">  &lt;/proxies&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Activation"><a href="#Activation" class="headerlink" title="Activation"></a>Activation</h2><p>作用：自动触发profile的条件逻辑。<br>如pom.xml中的profile一样，profile的作用在于它能够在某些特定的环境中自动使用某些特定的值；这些环境通过activation元素指定。<br>activation元素并不是激活profile的唯一方式。settings.xml文件中的activeProfile元素可以包含profile的id。profile也可以通过在命令行，使用-P标记和逗号分隔的列表来显式的激活（如，-P test）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;activation&gt;</span><br><span class="line">  &lt;!--profile默认是否激活的标识 --&gt;</span><br><span class="line">  &lt;activeByDefault&gt;false&lt;/activeByDefault&gt;</span><br><span class="line">  &lt;!--当匹配的jdk被检测到，profile被激活。例如，1.4激活JDK1.4，1.4.0_2，而!1.4激活所有版本不是以1.4开头的JDK。 --&gt;</span><br><span class="line">  &lt;jdk&gt;1.5&lt;/jdk&gt;</span><br><span class="line">  &lt;!--当匹配的操作系统属性被检测到，profile被激活。os元素可以定义一些操作系统相关的属性。 --&gt;</span><br><span class="line">  &lt;os&gt;</span><br><span class="line">    &lt;!--激活profile的操作系统的名字 --&gt;</span><br><span class="line">    &lt;name&gt;Windows XP&lt;/name&gt;</span><br><span class="line">    &lt;!--激活profile的操作系统所属家族(如 &apos;windows&apos;) --&gt;</span><br><span class="line">    &lt;family&gt;Windows&lt;/family&gt;</span><br><span class="line">    &lt;!--激活profile的操作系统体系结构 --&gt;</span><br><span class="line">    &lt;arch&gt;x86&lt;/arch&gt;</span><br><span class="line">    &lt;!--激活profile的操作系统版本 --&gt;</span><br><span class="line">    &lt;version&gt;5.1.2600&lt;/version&gt;</span><br><span class="line">  &lt;/os&gt;</span><br><span class="line">  &lt;!--如果Maven检测到某一个属性（其值可以在POM中通过$&#123;name&#125;引用），其拥有对应的name = 值，Profile就会被激活。如果值字段是空的，那么存在属性名称字段就会激活profile，否则按区分大小写方式匹配属性值字段 --&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">    &lt;!--激活profile的属性的名称 --&gt;</span><br><span class="line">    &lt;name&gt;mavenVersion&lt;/name&gt;</span><br><span class="line">    &lt;!--激活profile的属性的值 --&gt;</span><br><span class="line">    &lt;value&gt;2.0.3&lt;/value&gt;</span><br><span class="line">  &lt;/property&gt;</span><br><span class="line">  &lt;!--提供一个文件名，通过检测该文件的存在或不存在来激活profile。missing检查文件是否存在，如果不存在则激活profile。另一方面，exists则会检查文件是否存在，如果存在则激活profile。 --&gt;</span><br><span class="line">  &lt;file&gt;</span><br><span class="line">    &lt;!--如果指定的文件存在，则激活profile。 --&gt;</span><br><span class="line">    &lt;exists&gt;$&#123;basedir&#125;/file2.properties&lt;/exists&gt;</span><br><span class="line">    &lt;!--如果指定的文件不存在，则激活profile。 --&gt;</span><br><span class="line">    &lt;missing&gt;$&#123;basedir&#125;/file1.properties&lt;/missing&gt;</span><br><span class="line">  &lt;/file&gt;</span><br><span class="line">&lt;/activation&gt;</span><br></pre></td></tr></table></figure>
+<p>注：在maven工程的pom.xml所在目录下执行mvn help:active-profiles命令可以查看中央仓储的profile是否在工程中生效。</p>
+<h2 id="properties"><a href="#properties" class="headerlink" title="properties"></a>properties</h2><p>作用：对应profile的扩展属性列表。<br>maven属性和ant中的属性一样，可以用来存放一些值。这些值可以在pom.xml中的任何地方使用标记${X}来使用，这里X是指属性的名称。属性有五种不同的形式，并且都能在settings.xml文件中访问。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- </span><br><span class="line">  1. env.X: 在一个变量前加上&quot;env.&quot;的前缀，会返回一个shell环境变量。例如,&quot;env.PATH&quot;指代了$path环境变量（在Windows上是%PATH%）。 </span><br><span class="line">  2. project.x：指代了POM中对应的元素值。例如: &lt;project&gt;&lt;version&gt;1.0&lt;/version&gt;&lt;/project&gt;通过$&#123;project.version&#125;获得version的值。 </span><br><span class="line">  3. settings.x: 指代了settings.xml中对应元素的值。例如：&lt;settings&gt;&lt;offline&gt;false&lt;/offline&gt;&lt;/settings&gt;通过 $&#123;settings.offline&#125;获得offline的值。 </span><br><span class="line">  4. Java System Properties: 所有可通过java.lang.System.getProperties()访问的属性都能在POM中使用该形式访问，例如 $&#123;java.home&#125;。 </span><br><span class="line">  5. x: 在&lt;properties/&gt;元素中，或者外部文件中设置，以$&#123;someVar&#125;的形式使用。</span><br><span class="line"> --&gt;</span><br><span class="line">&lt;properties&gt;</span><br><span class="line">  &lt;user.install&gt;$&#123;user.home&#125;/our-project&lt;/user.install&gt;</span><br><span class="line">&lt;/properties&gt;</span><br></pre></td></tr></table></figure>
+<p>注：如果该profile被激活，则可以在pom.xml中使用${user.install}。</p>
+<h2 id="Repositories"><a href="#Repositories" class="headerlink" title="Repositories"></a>Repositories</h2><p>作用：远程仓库列表，它是maven用来填充构建系统本地仓库所使用的一组远程仓库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;repositories&gt;</span><br><span class="line">  &lt;!--包含需要连接到远程仓库的信息 --&gt;</span><br><span class="line">  &lt;repository&gt;</span><br><span class="line">    &lt;!--远程仓库唯一标识 --&gt;</span><br><span class="line">    &lt;id&gt;codehausSnapshots&lt;/id&gt;</span><br><span class="line">    &lt;!--远程仓库名称 --&gt;</span><br><span class="line">    &lt;name&gt;Codehaus Snapshots&lt;/name&gt;</span><br><span class="line">    &lt;!--如何处理远程仓库里发布版本的下载 --&gt;</span><br><span class="line">    &lt;releases&gt;</span><br><span class="line">      &lt;!--true或者false表示该仓库是否为下载某种类型构件（发布版，快照版）开启。 --&gt;</span><br><span class="line">      &lt;enabled&gt;false&lt;/enabled&gt;</span><br><span class="line">      &lt;!--该元素指定更新发生的频率。Maven会比较本地POM和远程POM的时间戳。这里的选项是：always（一直），daily（默认，每日），interval：X（这里X是以分钟为单位的时间间隔），或者never（从不）。 --&gt;</span><br><span class="line">      &lt;updatePolicy&gt;always&lt;/updatePolicy&gt;</span><br><span class="line">      &lt;!--当Maven验证构件校验文件失败时该怎么做-ignore（忽略），fail（失败），或者warn（警告）。 --&gt;</span><br><span class="line">      &lt;checksumPolicy&gt;warn&lt;/checksumPolicy&gt;</span><br><span class="line">    &lt;/releases&gt;</span><br><span class="line">    &lt;!--如何处理远程仓库里快照版本的下载。有了releases和snapshots这两组配置，POM就可以在每个单独的仓库中，为每种类型的构件采取不同的策略。例如，可能有人会决定只为开发目的开启对快照版本下载的支持。参见repositories/repository/releases元素 --&gt;</span><br><span class="line">    &lt;snapshots&gt;</span><br><span class="line">      &lt;enabled /&gt;</span><br><span class="line">      &lt;updatePolicy /&gt;</span><br><span class="line">      &lt;checksumPolicy /&gt;</span><br><span class="line">    &lt;/snapshots&gt;</span><br><span class="line">    &lt;!--远程仓库URL，按protocol://hostname/path形式 --&gt;</span><br><span class="line">    &lt;url&gt;http://snapshots.maven.codehaus.org/maven2&lt;/url&gt;</span><br><span class="line">    &lt;!--用于定位和排序构件的仓库布局类型-可以是default（默认）或者legacy（遗留）。Maven 2为其仓库提供了一个默认的布局；然而，Maven 1.x有一种不同的布局。我们可以使用该元素指定布局是default（默认）还是legacy（遗留）。 --&gt;</span><br><span class="line">    &lt;layout&gt;default&lt;/layout&gt;</span><br><span class="line">  &lt;/repository&gt;</span><br><span class="line">&lt;/repositories&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="pluginRepositories"><a href="#pluginRepositories" class="headerlink" title="pluginRepositories"></a>pluginRepositories</h2><p>作用：发现插件的远程仓库列表。<br>和repository类似，只是repository是管理jar包依赖的仓库，pluginRepositories则是管理插件的仓库。<br>maven插件是一种特殊类型的构件。由于这个原因，插件仓库独立于其它仓库。pluginRepositories元素的结构和repositories元素的结构类似。每个pluginRepository元素指定一个Maven可以用来寻找新插件的远程地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;pluginRepositories&gt;</span><br><span class="line">  &lt;!-- 包含需要连接到远程插件仓库的信息.参见profiles/profile/repositories/repository元素的说明 --&gt;</span><br><span class="line">  &lt;pluginRepository&gt;</span><br><span class="line">    &lt;releases&gt;</span><br><span class="line">      &lt;enabled /&gt;</span><br><span class="line">      &lt;updatePolicy /&gt;</span><br><span class="line">      &lt;checksumPolicy /&gt;</span><br><span class="line">    &lt;/releases&gt;</span><br><span class="line">    &lt;snapshots&gt;</span><br><span class="line">      &lt;enabled /&gt;</span><br><span class="line">      &lt;updatePolicy /&gt;</span><br><span class="line">      &lt;checksumPolicy /&gt;</span><br><span class="line">    &lt;/snapshots&gt;</span><br><span class="line">    &lt;id /&gt;</span><br><span class="line">    &lt;name /&gt;</span><br><span class="line">    &lt;url /&gt;</span><br><span class="line">    &lt;layout /&gt;</span><br><span class="line">  &lt;/pluginRepository&gt;</span><br><span class="line">&lt;/pluginRepositories&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="ActiveProfiles"><a href="#ActiveProfiles" class="headerlink" title="ActiveProfiles"></a>ActiveProfiles</h2><p>作用：手动激活profiles的列表，按照profile被应用的顺序定义activeProfile。<br>该元素包含了一组activeProfile元素，每个activeProfile都含有一个profile id。任何在activeProfile中定义的profile id，不论环境设置如何，其对应的 profile都会被激活。如果没有匹配的profile，则什么都不会发生。<br>例如，env-test是一个activeProfile，则在pom.xml（或者profile.xml）中对应id的profile会被激活。如果运行过程中找不到这样一个profile，Maven则会像往常一样运行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0</span><br><span class="line">                      https://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;</span><br><span class="line">  ...</span><br><span class="line">  &lt;activeProfiles&gt;</span><br><span class="line">    &lt;!-- 要激活的profile id --&gt;</span><br><span class="line">    &lt;activeProfile&gt;env-test&lt;/activeProfile&gt;</span><br><span class="line">  &lt;/activeProfiles&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/30/Mac-Eclipse安装lombok/" rel="next" title="Mac Eclipse安装lombok">
+                <i class="fa fa-chevron-left"></i> Mac Eclipse安装lombok
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/03/CentOS7-安装-Nginx/" rel="prev" title="CentOS7 安装 Nginx">
+                CentOS7 安装 Nginx <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">张亲</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概要"><span class="nav-number">1.</span> <span class="nav-text">概要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#settings-xml有什么用？"><span class="nav-number">1.1.</span> <span class="nav-text">settings.xml有什么用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#settings-xml文件位置"><span class="nav-number">1.2.</span> <span class="nav-text">settings.xml文件位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置优先级"><span class="nav-number">1.3.</span> <span class="nav-text">配置优先级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#settings-xml元素详解"><span class="nav-number">2.</span> <span class="nav-text">settings.xml元素详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#顶级元素概览"><span class="nav-number">2.1.</span> <span class="nav-text">顶级元素概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LocalRepository"><span class="nav-number">2.2.</span> <span class="nav-text">LocalRepository</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InteractiveMode"><span class="nav-number">2.3.</span> <span class="nav-text">InteractiveMode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UsePluginRegistry"><span class="nav-number">2.4.</span> <span class="nav-text">UsePluginRegistry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Offline"><span class="nav-number">2.5.</span> <span class="nav-text">Offline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PluginGroups"><span class="nav-number">2.6.</span> <span class="nav-text">PluginGroups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servers"><span class="nav-number">2.7.</span> <span class="nav-text">Servers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mirrors"><span class="nav-number">2.8.</span> <span class="nav-text">Mirrors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proxies"><span class="nav-number">2.9.</span> <span class="nav-text">Proxies</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Activation"><span class="nav-number">2.10.</span> <span class="nav-text">Activation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#properties"><span class="nav-number">2.11.</span> <span class="nav-text">properties</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Repositories"><span class="nav-number">2.12.</span> <span class="nav-text">Repositories</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pluginRepositories"><span class="nav-number">2.13.</span> <span class="nav-text">pluginRepositories</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ActiveProfiles"><span class="nav-number">2.14.</span> <span class="nav-text">ActiveProfiles</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张亲</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

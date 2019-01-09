@@ -1,12 +1,113 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
+
+
+
+
+
+
+
+
+
+
+
 
   
-  <title>Redis分布式锁实现 | 张亲的技术博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
   <meta name="description" content="分布式锁一般有三种实现方式：1. 数据库乐观锁；2. 基于Redis的分布式锁；3. 基于ZooKeeper的分布式锁。 我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-30">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
@@ -19,77 +120,284 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis分布式锁实现">
 <meta name="twitter:description" content="分布式锁一般有三种实现方式：1. 数据库乐观锁；2. 基于Redis的分布式锁；3. 基于ZooKeeper的分布式锁。 我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-30">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/24/Redis分布式锁实现/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Redis分布式锁实现 | 张亲的技术博客</title>
   
-    <link rel="alternate" href="/atom.xml" title="张亲的技术博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">张亲的技术博客</a>
-      </h1>
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张亲的技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
         
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-Redis分布式锁实现" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/07/24/Redis分布式锁实现/" class="article-date">
-  <time datetime="2018-07-24T05:11:42.000Z" itemprop="datePublished">2018-07-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/代码片段/">代码片段</a>
-  </div>
+          
+          <li class="menu-item menu-item-home">
 
-  </div>
-  <div class="article-inner">
     
     
-      <header class="article-header">
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
         
-  
-    <h1 class="article-title" itemprop="name">
-      Redis分布式锁实现
-    </h1>
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
   
 
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/24/Redis分布式锁实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张亲">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张亲的技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis分布式锁实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-07-24 13:11:42 / Modified: 13:29:37" itemprop="dateCreated datePublished" datetime="2018-07-24T13:11:42+08:00">2018-07-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/代码片段/" itemprop="url" rel="index"><span itemprop="name">代码片段</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
       
         <p>分布式锁一般有三种实现方式：1. 数据库乐观锁；2. 基于Redis的分布式锁；3. 基于ZooKeeper的分布式锁。</p>
 <p>我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-3000款商品，高并发下（重点指混合场景下的并发）RedisLockRegistry在此场景的的缺点就暴露出来了：不可批量获取和释放锁，我们订单下的所有商品加锁，会消耗大量的网络资源且获取整单商品锁的时间和不可控制。</p>
@@ -98,145 +406,380 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Set;</span><br><span class="line">import java.util.concurrent.CopyOnWriteArrayList;</span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.collections.CollectionUtils;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.dao.DataAccessException;</span><br><span class="line">import org.springframework.data.redis.connection.RedisConnection;</span><br><span class="line">import org.springframework.data.redis.connection.RedisConnectionFactory;</span><br><span class="line">import org.springframework.data.redis.core.*;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * </span><br><span class="line"> * ClassName: RedisBatchLockRegistry </span><br><span class="line"> * @Description: Redis分布式锁，支持批量获取和释放锁</span><br><span class="line"> * </span><br><span class="line"> * org.springframework.integration.redis.util.RedisLockRegistry 存在两个问题：</span><br><span class="line"> * 1.不支持锁的批量获取和释放</span><br><span class="line"> * 2.锁的重试时间只能为100毫秒</span><br><span class="line"> * </span><br><span class="line"> * 该类参考自RedisLockRegistry，与之对比不同点为：</span><br><span class="line"> * 1.增加了锁的批量获取和释放</span><br><span class="line"> * 2.去除了本地锁实现（RedisLockRegistry的方式实现实际上为Redis锁＋本地锁双重锁）</span><br><span class="line"> * </span><br><span class="line"> * @author zhangq</span><br><span class="line"> * @date 2017年5月24日</span><br><span class="line"> *</span><br><span class="line"> * =================================================================================================</span><br><span class="line"> *     Task ID			  Date			     Author		      Description</span><br><span class="line"> * ----------------+----------------+-------------------+-------------------------------------------</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class RedisBatchLockRegistry &#123;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * Logger</span><br><span class="line">	 */</span><br><span class="line">	private static final Logger LOG = LoggerFactory.getLogger(RedisBatchLockRegistry.class);</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * Redis模版</span><br><span class="line">	 */</span><br><span class="line">	@Autowired</span><br><span class="line">	private RedisTemplate&lt;String, String&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">	public RedisBatchLockRegistry()&#123;&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * &lt;p&gt;Title: 初始化&lt;/p&gt; </span><br><span class="line">	 * &lt;p&gt;Description: &lt;/p&gt; </span><br><span class="line">	 * @param connectionFactory</span><br><span class="line">	 */</span><br><span class="line">	public RedisBatchLockRegistry(RedisConnectionFactory connectionFactory) &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * @Description: 尝试批量获取锁</span><br><span class="line">	 * @param list</span><br><span class="line">	 * @param maxWait</span><br><span class="line">	 * @return boolean  </span><br><span class="line">	 * @author zhangq</span><br><span class="line">	 * @throws InterruptedException </span><br><span class="line">	 * @date 2017年5月27日</span><br><span class="line">	 */</span><br><span class="line">	@SuppressWarnings(&quot;rawtypes&quot;)</span><br><span class="line">	public boolean tryLock(final Set&lt;String&gt; keys, long maxWait, long timeout) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			LOG.info(&quot;尝试获取锁：&#123;&#125;&quot;, keys);</span><br><span class="line"></span><br><span class="line">			// 需要获取的锁</span><br><span class="line">			final List&lt;String&gt; needLocking = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line">			needLocking.addAll(keys);</span><br><span class="line"></span><br><span class="line">			// 已经获取的锁</span><br><span class="line">			List&lt;String&gt; locked = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">			// 获取等待时间的最后时间段</span><br><span class="line">			long expireAt = System.currentTimeMillis() + maxWait;</span><br><span class="line"></span><br><span class="line">			// 循环判断锁是否一直存在</span><br><span class="line">			while (System.currentTimeMillis() &lt; expireAt) &#123;</span><br><span class="line"></span><br><span class="line">				// 通过管道批量获取锁</span><br><span class="line">				LOG.info(&quot;进入tryLock while，needLocking：&#123;&#125;&quot;, needLocking);</span><br><span class="line">				List&lt;Object&gt; results = redisTemplate.executePipelined(new RedisCallback() &#123;</span><br><span class="line"></span><br><span class="line">					@Override</span><br><span class="line">					public Object doInRedis(RedisConnection connection) throws DataAccessException &#123;</span><br><span class="line">						LOG.info(&quot;connection:&#123;&#125;, needLocking:&#123;&#125;&quot;, connection, needLocking);</span><br><span class="line">						String value = System.currentTimeMillis() + &quot;&quot;;</span><br><span class="line">						for (String key : needLocking) &#123;</span><br><span class="line">							LOG.info(&quot;key :&#123;&#125;&quot;, key);</span><br><span class="line">							// 如果不存在则 SET。SET if Not eXists。</span><br><span class="line">							connection.setNX(key.getBytes(), value.getBytes());</span><br><span class="line">							// LOG.info(&quot;pipelined setNX result:&#123;&#125;, key:&#123;&#125;,</span><br><span class="line">							// value:&#123;&#125;&quot;, flag, key, key);</span><br><span class="line">						&#125;</span><br><span class="line">						return null;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line"></span><br><span class="line">				// 提交redis执行计数</span><br><span class="line">				LOG.info(&quot;needLocking:&#123;&#125;,results:&#123;&#125;&quot;, needLocking, results);</span><br><span class="line">				for (int i = 0; i &lt; results.size(); i++) &#123;</span><br><span class="line">					// 是否执行成功</span><br><span class="line">					Boolean success = (Boolean) results.get(i);</span><br><span class="line">					// 锁的KEY</span><br><span class="line">					String key = needLocking.get(i);</span><br><span class="line"></span><br><span class="line">					// setnx成功，获得锁</span><br><span class="line">					if (success) &#123;</span><br><span class="line">						// 设置锁的过期时间</span><br><span class="line">						redisTemplate.expire(key, timeout, TimeUnit.MILLISECONDS);</span><br><span class="line">						locked.add(key);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				// 移除已锁定资源</span><br><span class="line">				needLocking.removeAll(locked);</span><br><span class="line"></span><br><span class="line">				// 是否锁住全部资源</span><br><span class="line">				if (CollectionUtils.isEmpty(needLocking)) &#123;</span><br><span class="line">					// 全部资源均已锁住，返回成功true</span><br><span class="line">					return true;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					// 补偿处理，防止异常情况下（宕机/重启/连接超时等）导致的锁永不过期</span><br><span class="line">					List&lt;String&gt; exceptionLock = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line">					for (String key : needLocking) &#123;</span><br><span class="line">						String value = redisTemplate.opsForValue().get(key);</span><br><span class="line">						// 当前时间 &gt; 上锁时间 + 超时时间 + 2秒（经验时间），表示为该过期却未过期的数据，即异常数据</span><br><span class="line">						if (null != value &amp;&amp; System.currentTimeMillis() &gt; Long.parseLong(value) + timeout + 2000) &#123;</span><br><span class="line">							exceptionLock.add(key);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					// 删除所有异常的 KEY</span><br><span class="line">					if (CollectionUtils.isNotEmpty(exceptionLock)) &#123;</span><br><span class="line">						unLock(exceptionLock);</span><br><span class="line">					&#125;</span><br><span class="line"></span><br><span class="line">					// 部分资源未能锁住，间隔N毫秒后重试</span><br><span class="line">					Thread.sleep(10);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			// 仍有资源未被锁住（needLocking不为空），释放已锁定的资源，并返回失败false</span><br><span class="line">			if (!CollectionUtils.isEmpty(needLocking)) &#123;</span><br><span class="line">				LOG.info(&quot;can not get the lock, keys:&#123;&#125;&quot;, needLocking);</span><br><span class="line">				unLock(locked);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			LOG.info(&quot;尝试获取锁失败：&#123;&#125;&quot;, e);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * @Description: 批量释放锁</span><br><span class="line">	 * @param list   </span><br><span class="line">	 * @return void  </span><br><span class="line">	 * @author zhangq</span><br><span class="line">	 * @date 2017年5月27日</span><br><span class="line">	 */</span><br><span class="line">	public void unLock(Collection&lt;String&gt; keys) &#123;</span><br><span class="line">		try&#123;</span><br><span class="line">			// 防止多个服务器处理同一个key需要watch操作(相当于是禁止了其他client处理这个key)</span><br><span class="line">			//redisTemplate.watch(keys);</span><br><span class="line"></span><br><span class="line">			// 批量释放锁</span><br><span class="line">			redisTemplate.delete(keys);</span><br><span class="line"></span><br><span class="line">			// 锁已经过期了，释放watch操作</span><br><span class="line">			//redisTemplate.unwatch();</span><br><span class="line">		&#125;catch (Exception e)&#123;</span><br><span class="line">			LOG.error(&quot;批量释放锁失败!&quot;,e);</span><br><span class="line">		&#125;finally &#123;</span><br><span class="line">			RedisConnectionUtils.unbindConnection(redisTemplate.getConnectionFactory());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/24/Redis分布式锁实现/" data-id="cjoh5opns000fk53f8bdbe9z2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
 
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/20/Dubbo管理控制台的安装/" rel="next" title="Dubbo管理控制台的安装">
+                <i class="fa fa-chevron-left"></i> Dubbo管理控制台的安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/" rel="prev" title="Swagger2多个包路径扫描匹配支持">
+                Swagger2多个包路径扫描匹配支持 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
   </div>
   
-    
-<nav id="article-nav">
   
-    <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
         
-          Swagger2多个包路径扫描匹配支持
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">张亲</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
         
       </div>
-    </a>
-  
-  
-    <a href="/2018/07/20/Dubbo管理控制台的安装/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Dubbo管理控制台的安装</div>
-    </a>
-  
-</nav>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张亲</span>
 
   
-</article>
 
-</section>
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.6.0</div>
+
+
+
+
         
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA基础/">JAVA基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/代码片段/">代码片段</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/基于Dubbo的分布式系统架构实战/">基于Dubbo的分布式系统架构实战</a></li></ul>
-    </div>
-  </div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dubbo/">Dubbo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JDK/">JDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM/">JVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RZ-SZ/">RZ/SZ</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis-Redisson/">Redis,Redisson</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swagger2/">Swagger2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Zookeeper/">Zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟化/">虚拟化</a></li></ul>
-    </div>
-  </div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/RZ-SZ/" style="font-size: 10px;">RZ/SZ</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Redis-Redisson/" style="font-size: 10px;">Redis,Redisson</a> <a href="/tags/Swagger2/" style="font-size: 10px;">Swagger2</a> <a href="/tags/Zookeeper/" style="font-size: 10px;">Zookeeper</a> <a href="/tags/虚拟化/" style="font-size: 10px;">虚拟化</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li></ul>
-    </div>
-  </div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2018/11/14/简单使用setNX命令封装分布式锁的缺陷/">简单使用setNX命令封装分布式锁的缺陷</a>
-          </li>
-        
-          <li>
-            <a href="/2018/09/11/GitLab安装部署文档/">GitLab安装部署文档</a>
-          </li>
-        
-          <li>
-            <a href="/2018/09/04/Mysql性能问题定位及解决/">Mysql性能问题定位及解决</a>
-          </li>
-        
-          <li>
-            <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/">Swagger2多个包路径扫描匹配支持</a>
-          </li>
-        
-          <li>
-            <a href="/2018/07/24/Redis分布式锁实现/">Redis分布式锁实现</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
 
-  
-</aside>
+
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2018 张亲<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
+	
+    
 
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
+    
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
