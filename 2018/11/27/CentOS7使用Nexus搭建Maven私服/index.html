@@ -108,24 +108,25 @@
 
 
 
-  <meta name="description" content="接入指南签名规则接口文档查询城市列表查询已开通亲邻开门的城市列表https://openapi.qinlinkeji.com/api/area/getOpenedCityList 查询已开通亲邻开门的城市列表(按城市首字母分组)https://openapi.qinlinkeji.com/api/area/getOpenedCityListGroupByInitial 查询已开通亲邻开门的省市区树">
+  <meta name="description" content="私服是架设在局域网的一种特殊的远程仓库，目的是代理远程仓库及部署第三方构件。有了私服之后，当 Maven 需要下载构件时，直接请求私服，私服上存在则下载到本地仓库；否则，私服请求外部的远程仓库，将构件下载到私服，再提供给本地仓库下载。 我们可以使用专门的 Maven 仓库管理软件来搭建私服，比如：Apache Archiva，Artifactory，Sonatype Nexus。这里我们使用Son">
+<meta name="keywords" content="Nexus,Maven">
 <meta property="og:type" content="article">
-<meta property="og:title" content="亲邻开门能力中心开放平台技术文档">
-<meta property="og:url" content="http://yoursite.com/2018/12/27/亲邻开门能力中心开放平台技术文档/index.html">
+<meta property="og:title" content="CentOS7使用Nexus搭建Maven私服">
+<meta property="og:url" content="http://yoursite.com/2018/11/27/CentOS7使用Nexus搭建Maven私服/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
-<meta property="og:description" content="接入指南签名规则接口文档查询城市列表查询已开通亲邻开门的城市列表https://openapi.qinlinkeji.com/api/area/getOpenedCityList 查询已开通亲邻开门的城市列表(按城市首字母分组)https://openapi.qinlinkeji.com/api/area/getOpenedCityListGroupByInitial 查询已开通亲邻开门的省市区树">
+<meta property="og:description" content="私服是架设在局域网的一种特殊的远程仓库，目的是代理远程仓库及部署第三方构件。有了私服之后，当 Maven 需要下载构件时，直接请求私服，私服上存在则下载到本地仓库；否则，私服请求外部的远程仓库，将构件下载到私服，再提供给本地仓库下载。 我们可以使用专门的 Maven 仓库管理软件来搭建私服，比如：Apache Archiva，Artifactory，Sonatype Nexus。这里我们使用Son">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-27T05:08:21.594Z">
+<meta property="og:updated_time" content="2019-01-11T13:32:13.119Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="亲邻开门能力中心开放平台技术文档">
-<meta name="twitter:description" content="接入指南签名规则接口文档查询城市列表查询已开通亲邻开门的城市列表https://openapi.qinlinkeji.com/api/area/getOpenedCityList 查询已开通亲邻开门的城市列表(按城市首字母分组)https://openapi.qinlinkeji.com/api/area/getOpenedCityListGroupByInitial 查询已开通亲邻开门的省市区树">
+<meta name="twitter:title" content="CentOS7使用Nexus搭建Maven私服">
+<meta name="twitter:description" content="私服是架设在局域网的一种特殊的远程仓库，目的是代理远程仓库及部署第三方构件。有了私服之后，当 Maven 需要下载构件时，直接请求私服，私服上存在则下载到本地仓库；否则，私服请求外部的远程仓库，将构件下载到私服，再提供给本地仓库下载。 我们可以使用专门的 Maven 仓库管理软件来搭建私服，比如：Apache Archiva，Artifactory，Sonatype Nexus。这里我们使用Son">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/12/27/亲邻开门能力中心开放平台技术文档/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/27/CentOS7使用Nexus搭建Maven私服/"/>
 
 
 
@@ -135,7 +136,7 @@
   };
 </script>
 
-  <title>亲邻开门能力中心开放平台技术文档 | 张亲的技术博客</title>
+  <title>CentOS7使用Nexus搭建Maven私服 | 张亲的技术博客</title>
   
 
 
@@ -300,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/27/亲邻开门能力中心开放平台技术文档/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/27/CentOS7使用Nexus搭建Maven私服/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="张亲">
@@ -317,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">亲邻开门能力中心开放平台技术文档
+          <h1 class="post-title" itemprop="name headline">CentOS7使用Nexus搭建Maven私服
               
             
           </h1>
@@ -342,16 +343,46 @@
                 
               
 
-              <time title="Created: 2018-12-27 11:25:19 / Modified: 13:08:21" itemprop="dateCreated datePublished" datetime="2018-12-27T11:25:19+08:00">2018-12-27</time>
+              <time title="Created: 2018-11-27 10:12:26" itemprop="dateCreated datePublished" datetime="2018-11-27T10:12:26+08:00">2018-11-27</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-11 21:32:13" itemprop="dateModified" datetime="2019-01-11T21:32:13+08:00">2019-01-11</time>
               
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -380,15 +411,22 @@
       
 
       
-        <h1 id="接入指南"><a href="#接入指南" class="headerlink" title="接入指南"></a>接入指南</h1><h2 id="签名规则"><a href="#签名规则" class="headerlink" title="签名规则"></a>签名规则</h2><h2 id="接口文档"><a href="#接口文档" class="headerlink" title="接口文档"></a>接口文档</h2><h3 id="查询城市列表"><a href="#查询城市列表" class="headerlink" title="查询城市列表"></a>查询城市列表</h3><h4 id="查询已开通亲邻开门的城市列表"><a href="#查询已开通亲邻开门的城市列表" class="headerlink" title="查询已开通亲邻开门的城市列表"></a>查询已开通亲邻开门的城市列表</h4><p><a href="https://openapi.qinlinkeji.com/api/area/getOpenedCityList" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/area/getOpenedCityList</a></p>
-<h4 id="查询已开通亲邻开门的城市列表-按城市首字母分组"><a href="#查询已开通亲邻开门的城市列表-按城市首字母分组" class="headerlink" title="查询已开通亲邻开门的城市列表(按城市首字母分组)"></a>查询已开通亲邻开门的城市列表(按城市首字母分组)</h4><p><a href="https://openapi.qinlinkeji.com/api/area/getOpenedCityListGroupByInitial" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/area/getOpenedCityListGroupByInitial</a></p>
-<h4 id="查询已开通亲邻开门的省市区树"><a href="#查询已开通亲邻开门的省市区树" class="headerlink" title="查询已开通亲邻开门的省市区树"></a>查询已开通亲邻开门的省市区树</h4><p><a href="https://openapi.qinlinkeji.com/api/area/getOpenedAreaTree" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/area/getOpenedAreaTree</a></p>
-<h3 id="查询小区列表"><a href="#查询小区列表" class="headerlink" title="查询小区列表"></a>查询小区列表</h3><h4 id="根据城市编码查询已开通亲邻开门的小区列表"><a href="#根据城市编码查询已开通亲邻开门的小区列表" class="headerlink" title="根据城市编码查询已开通亲邻开门的小区列表"></a>根据城市编码查询已开通亲邻开门的小区列表</h4><p><a href="https://openapi.qinlinkeji.com/api/community/getCommunityListByCityCode" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/community/getCommunityListByCityCode</a></p>
-<h4 id="根据地区编码查询已开通亲邻开门的小区列表"><a href="#根据地区编码查询已开通亲邻开门的小区列表" class="headerlink" title="根据地区编码查询已开通亲邻开门的小区列表"></a>根据地区编码查询已开通亲邻开门的小区列表</h4><p><a href="https://openapi.qinlinkeji.com/api/community/getCommunityListByDistrictCode" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/community/getCommunityListByDistrictCode</a></p>
-<h4 id="查询有开门权限的小区列表"><a href="#查询有开门权限的小区列表" class="headerlink" title="查询有开门权限的小区列表"></a>查询有开门权限的小区列表</h4><p><a href="https://openapi.qinlinkeji.com/api/community/getAuthedCommunityList" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/community/getAuthedCommunityList</a></p>
-<h3 id="查询门禁列表"><a href="#查询门禁列表" class="headerlink" title="查询门禁列表"></a>查询门禁列表</h3><p><a href="https://openapi.qinlinkeji.com/api/door/getDoorList" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/door/getDoorList</a><br><a href="https://openapi.qinlinkeji.com/api/door/openDoor" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/door/openDoor</a></p>
-<h3 id="开门认证申请"><a href="#开门认证申请" class="headerlink" title="开门认证申请"></a>开门认证申请</h3><h4 id="提交开门认证申请"><a href="#提交开门认证申请" class="headerlink" title="提交开门认证申请"></a>提交开门认证申请</h4><p><a href="https://openapi.qinlinkeji.com/api/auth/submitApply" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/auth/submitApply</a></p>
-<h3 id="查询开门认证记录"><a href="#查询开门认证记录" class="headerlink" title="查询开门认证记录"></a>查询开门认证记录</h3><p><a href="https://openapi.qinlinkeji.com/api/auth/getAuthApplyList" target="_blank" rel="noopener">https://openapi.qinlinkeji.com/api/auth/getAuthApplyList</a></p>
+        <p>私服是架设在局域网的一种特殊的远程仓库，目的是代理远程仓库及部署第三方构件。有了私服之后，当 Maven 需要下载构件时，直接请求私服，私服上存在则下载到本地仓库；否则，私服请求外部的远程仓库，将构件下载到私服，再提供给本地仓库下载。</p>
+<p>我们可以使用专门的 Maven 仓库管理软件来搭建私服，比如：Apache Archiva，Artifactory，Sonatype Nexus。这里我们使用<strong>Sonatype Nexus</strong>。</p>
+<a id="more"></a>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
+<li>服务器准备<br>IP地址：192.168.1.183<br>配置：C1M1 20GB<br>服务器需先安装JDK，详见《<a href="/2018/07/19/CentOS安装JDK8">CentOS7安装JDK8</a>》</li>
+</ul>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><ul>
+<li><p>下载地址：<br><a href="https://www.sonatype.com/download-oss-sonatype" target="_blank" rel="noopener">https://www.sonatype.com/download-oss-sonatype</a></p>
+</li>
+<li><p>版本区别<br>1、Nexus OSS （ OSS = Open Source Software）这个版本包含基于Sonatype 开源软件代码的基本功能和以包形式发布为开源的其他功能，免费试用许可证请查看下载后的二进制包。<br>2、Nexus Professional Nexus Professional CLM Edition这个是旗舰版，包含了专业版本的所有功能。需要购买许可证。<br>3、Nexus Professional Trial 试用版，不包含Nexus Professional Nexus Professional CLM Edition所有的功能。</p>
+</li>
+</ul>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># tar -zxf nexus-2.14.11-01-bundle.tar.gz -C /muxin/appserver/</span><br><span class="line"># mv /muxin/appserver/sonatype-work/ /muxin/data/</span><br><span class="line"># vi /muxin/appserver/nexus-2.14.11-01/conf/nexus.properties</span><br><span class="line">......此处省略......</span><br><span class="line">nexus-work=/muxin/data/sonatype-work/nexus</span><br><span class="line">......此处省略......</span><br><span class="line"></span><br><span class="line"># vi /muxin/appserver/nexus-2.14.11-01/bin/nexus</span><br><span class="line">......此处省略......</span><br><span class="line">RUN_AS_USER=root</span><br><span class="line">......此处省略......</span><br><span class="line"></span><br><span class="line"># firewall-cmd --permanent --zone=public --add-port=8081/tcp</span><br><span class="line"># firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h1 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># /muxin/appserver/nexus-2.14.11-01/bin/nexus start</span><br></pre></td></tr></table></figure>
+<h1 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/init.d/nexus</span><br><span class="line">#! /bin/bash</span><br><span class="line"># chkconfig:2345 10 90</span><br><span class="line"># description:nexus</span><br><span class="line"># processname:nexus</span><br><span class="line">case $1 in</span><br><span class="line">          start) su root /muxin/appserver/nexus-2.14.11-01/bin/nexus start;;</span><br><span class="line">          stop) su root /muxin/appserver/nexus-2.14.11-01/bin/nexus stop;;</span><br><span class="line">          status) su root /muxin/appserver/nexus-2.14.11-01/bin/nexus status;;</span><br><span class="line">          restart) su root /muxin/appserver/nexus-2.14.11-01/bin/nexus restart;;</span><br><span class="line">          *) echo &quot;require start|stop|status|restart&quot;;;</span><br><span class="line">esac</span><br><span class="line"># chmod +x /etc/init.d/nexus</span><br><span class="line"># chkconfig --add nexus</span><br></pre></td></tr></table></figure>
+<h1 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h1><p><a href="http://192.168.1.183:8081/nexus/#welcome" target="_blank" rel="noopener">http://192.168.1.183:8081/nexus/#welcome</a><br>默认账号/密码：admin/admin123</p>
 
       
     </div>
@@ -410,6 +448,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Nexus-Maven/" rel="tag"># Nexus,Maven</a>
+          
+        </div>
+      
 
       
       
@@ -419,8 +463,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/03/CentOS7-安装-Nginx/" rel="next" title="CentOS7 安装 Nginx">
-                <i class="fa fa-chevron-left"></i> CentOS7 安装 Nginx
+              <a href="/2018/11/14/简单使用setNX命令封装分布式锁的缺陷/" rel="next" title="简单使用setNX命令封装分布式锁的缺陷">
+                <i class="fa fa-chevron-left"></i> 简单使用setNX命令封装分布式锁的缺陷
               </a>
             
           </div>
@@ -429,8 +473,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/09/CentOS7-FTP服务搭建/" rel="prev" title="CentOS7 FTP服务搭建">
-                CentOS7 FTP服务搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/30/Mac-Eclipse安装lombok/" rel="prev" title="Mac Eclipse安装lombok">
+                Mac Eclipse安装lombok <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -501,7 +545,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -524,7 +568,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -559,7 +605,17 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">tags</span>
                   
                 </div>
@@ -594,7 +650,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#接入指南"><span class="nav-number">1.</span> <span class="nav-text">接入指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#签名规则"><span class="nav-number">1.1.</span> <span class="nav-text">签名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口文档"><span class="nav-number">1.2.</span> <span class="nav-text">接口文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查询城市列表"><span class="nav-number">1.2.1.</span> <span class="nav-text">查询城市列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查询已开通亲邻开门的城市列表"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">查询已开通亲邻开门的城市列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询已开通亲邻开门的城市列表-按城市首字母分组"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">查询已开通亲邻开门的城市列表(按城市首字母分组)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询已开通亲邻开门的省市区树"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">查询已开通亲邻开门的省市区树</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询小区列表"><span class="nav-number">1.2.2.</span> <span class="nav-text">查询小区列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#根据城市编码查询已开通亲邻开门的小区列表"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">根据城市编码查询已开通亲邻开门的小区列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#根据地区编码查询已开通亲邻开门的小区列表"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">根据地区编码查询已开通亲邻开门的小区列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询有开门权限的小区列表"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">查询有开门权限的小区列表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询门禁列表"><span class="nav-number">1.2.3.</span> <span class="nav-text">查询门禁列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开门认证申请"><span class="nav-number">1.2.4.</span> <span class="nav-text">开门认证申请</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#提交开门认证申请"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">提交开门认证申请</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询开门认证记录"><span class="nav-number">1.2.5.</span> <span class="nav-text">查询开门认证记录</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下载"><span class="nav-number">2.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动"><span class="nav-number">4.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开机启动"><span class="nav-number">5.</span> <span class="nav-text">开机启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#访问"><span class="nav-number">6.</span> <span class="nav-text">访问</span></a></li></ol></div>
             
 
           </div>

@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="简介Vsftpd全称是：Very Secure FTP Deamon。Vsftpd是linux类操作系统上运行的ftp服务器软件。  FTP文件传输有两种模式，PORT（主动）模式和PASSIVE（被动）模式。">
+<meta name="keywords" content="FTP,VSFTPD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7搭建FTP（被动模式）">
+<meta property="og:url" content="http://yoursite.com/2019/01/11/CentOS7搭建FTP（被动模式）/index.html">
+<meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="简介Vsftpd全称是：Very Secure FTP Deamon。Vsftpd是linux类操作系统上运行的ftp服务器软件。  FTP文件传输有两种模式，PORT（主动）模式和PASSIVE（被动）模式。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-11T13:20:50.129Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7搭建FTP（被动模式）">
+<meta name="twitter:description" content="简介Vsftpd全称是：Very Secure FTP Deamon。Vsftpd是linux类操作系统上运行的ftp服务器软件。  FTP文件传输有两种模式，PORT（主动）模式和PASSIVE（被动）模式。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/11/CentOS7搭建FTP（被动模式）/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>CentOS7搭建FTP（被动模式） | 张亲的技术博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张亲的技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/11/CentOS7搭建FTP（被动模式）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张亲">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张亲的技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CentOS7搭建FTP（被动模式）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-01-11 21:09:08 / Modified: 21:20:50" itemprop="dateCreated datePublished" datetime="2019-01-11T21:09:08+08:00">2019-01-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Vsftpd全称是：Very Secure FTP Deamon。Vsftpd是linux类操作系统上运行的ftp服务器软件。 </p>
+<p>FTP文件传输有两种模式，PORT（主动）模式和PASSIVE（被动）模式。</p>
+<a id="more"></a>
+<p>PORT（主动）模式在创建数据传输连接时，需要服务器去连接客户端，在客户端大量处于NAT网关后的Internet里面，几乎是无法实现的事情。</p>
+<p>PASSIVE（被动）模式是如今使用最广泛的，可是即使是PASSIVE（被动）模式，传输过程中需要使用“命令连接”和“数据连接”配合才能完成一个文件传输，因此FTP服务器在配置时，常常需要在服务器端配置PASSIVE端口段，用于客户端传输时进行连接，这些端口段需要在服务器的防火墙上打开、在云服务的安全组中打开，客户端才能正常的连接到FTP服务器。</p>
+<p><strong>在阿里云专用网络里是无法使用主动模式的，需要在ECS上搭建FTP的这里就不要踩坑了。本文示例主要针对被动模式，主动模式配置相对简单，可移步百度。</strong></p>
+<h2 id="登陆方式"><a href="#登陆方式" class="headerlink" title="登陆方式"></a>登陆方式</h2><ul>
+<li>1.匿名登录</li>
+<li>2.本地用户登录</li>
+<li>3.虚拟用户登录</li>
+</ul>
+<h2 id="Port模式（主动模式）"><a href="#Port模式（主动模式）" class="headerlink" title="Port模式（主动模式）"></a>Port模式（主动模式）</h2><p>Ftp客户端首先和Ftp server的tcp 21端口建立连接，通过这个通道发送命令，客户端要接受数据的时候在这个通道上发送Port命令，Port命令包含了客户端用什么端口（一个大于1024的端口）接受数据，在传送数据的时候，服务器端通过自己的TCP 20端口发送数据。这个时候数据连接由server向client建立一个连接。<br>Port交互流程：</p>
+<ul>
+<li>client端<br>client链接server的21端口，并发送用户名密码和一个随机在1024上的端口及port命令给server，表明采用主动模式，并开放那个随机的端口。</li>
+<li>server端<br>server收到client发来的Port主动模式命令与端口后，会通过自己的20端口与client那个随机的端口连接后，进行数据传输。</li>
+</ul>
+<h2 id="Pasv模式（被动方式）"><a href="#Pasv模式（被动方式）" class="headerlink" title="Pasv模式（被动方式）"></a>Pasv模式（被动方式）</h2><p>建立控制通道和Port模式类似，当客户端通过这个通道发送Pasv命令的时候，Ftp server打开了一个位于1024和5000之间的随机端口并且通知客户端在这个端口上进行传输数据请求，然后Ftp server将通过这个端口进行数据传输。这个时候数据连接由client向server建立连接。<br>Pasv交互流程：</p>
+<ul>
+<li>client端<br>client连接server的21号端口，发送用户名密码及pasv命令给server，表明采用被动模式。</li>
+<li>server端<br>server收到client发来的pasv被动模式命令之后，把随机开放在1024上的端口告诉client，client再用自己的20 端口与server的那个随机端口进行连接后进行数据传输。</li>
+</ul>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="服务器准备"><a href="#服务器准备" class="headerlink" title="服务器准备"></a>服务器准备</h2><p>192.168.1.186</p>
+<h2 id="关闭SELINUX"><a href="#关闭SELINUX" class="headerlink" title="关闭SELINUX"></a>关闭SELINUX</h2><p><strong>这一步非常非常非常重要</strong>，否则会报<code>pam_userdb(vsftpd:auth): user_lookup: could not open database xxxx Permission denied</code>错误。<br>原本以为我的虚拟机模板中的SELINUX设置为了disabled，所以在按网上的教程搭建时都跳过了这一步。折腾了一整天，这才检查了下，发现SELINUX没有设置。想起来之前重新做了虚拟机模板，没有修改SELINUX。大意了。<br>编辑<code>/etc/selinux/config</code>文件，将所有配置注释掉，增加<code>SELINUX=disabled</code>,执行<code>setenforce 0</code>使配置生效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/selinux/config</span><br><span class="line"></span><br><span class="line">··········vi begin··········</span><br><span class="line"># SELINUX=enforcing</span><br><span class="line"># SELINUXTYPE=targeted</span><br><span class="line">SELINUX=disabled</span><br><span class="line">··········vi end··········</span><br><span class="line"></span><br><span class="line"># setenforce 0</span><br></pre></td></tr></table></figure></p>
+<p><strong>阿里ECS上的CentOS7默认是disabled的，可以不用跳过这一步。</strong></p>
+<h2 id="安装并设置开机自启"><a href="#安装并设置开机自启" class="headerlink" title="安装并设置开机自启"></a>安装并设置开机自启</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># yum install vsftpd -y</span><br><span class="line"># systemctl enable vsftpd</span><br></pre></td></tr></table></figure>
+<p>常用命令</p>
+<ul>
+<li>启动 <code>systemctl start vsftpd</code></li>
+<li>查看状态 <code>service vsftpd status</code></li>
+<li>重启 <code>systemctl restart vsftpd</code></li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="创建vsftpd虚拟宿主用户"><a href="#创建vsftpd虚拟宿主用户" class="headerlink" title="创建vsftpd虚拟宿主用户"></a>创建vsftpd虚拟宿主用户</h2><p>因为vsftpd默认的宿主用户是root，不符合安全性要求。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># useradd vsftpd -d /vsftpd -s /bin/false</span><br><span class="line"># chown vsftpd:vsftpd /vsftpd -R</span><br></pre></td></tr></table></figure></p>
+<h2 id="修改vsftpd的配置文件"><a href="#修改vsftpd的配置文件" class="headerlink" title="修改vsftpd的配置文件"></a>修改vsftpd的配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"># cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.backup.conf</span><br><span class="line"># vi /etc/vsftpd/vsftpd.conf</span><br><span class="line"></span><br><span class="line">··········vi begin··········</span><br><span class="line"># 是否允许匿名，设置为NO代表不允许匿名</span><br><span class="line">anonymous_enable=NO</span><br><span class="line"># 设定本地用户可以访问，主要是虚拟宿主用户，如果设为NO那么所有虚拟用户将无法访问。</span><br><span class="line">local_enable=YES</span><br><span class="line"># 可以进行写的操作</span><br><span class="line">write_enable=YES</span><br><span class="line"># 设定上传文件的权限掩码</span><br><span class="line">local_umask=022</span><br><span class="line"># 禁止匿名账号上传</span><br><span class="line">#anon_upload_enable=YES</span><br><span class="line"># 禁止匿名用户建立目录</span><br><span class="line">#anon_mkdir_write_enable=YES</span><br><span class="line"># 设定开启目录标语功能</span><br><span class="line">dirmessage_enable=YES</span><br><span class="line"># 设定开启日志记录功能</span><br><span class="line">xferlog_enable=YES</span><br><span class="line"># 设定端口20进行数据连接，被动模式设为NO</span><br><span class="line">connect_from_port_20=NO</span><br><span class="line"># 设定禁止上传文件更改宿主</span><br><span class="line">#chown_uploads=YES</span><br><span class="line">#chown_username=whoever</span><br><span class="line"># 设定vsftpd服务日志保存路劲。</span><br><span class="line"># 注意：改文件默认不纯在，需手动touch。</span><br><span class="line"># 且由于这里更改了vsftpd服务的宿主用户为手动建立的vsftpd，则必须注意给予该用户对日志的读取权限否则服务启动失败。</span><br><span class="line">#xferlog_file=/muxin/logs/vsftpd.log</span><br><span class="line">#xferlog_file=/var/log/xferlog</span><br><span class="line"># 设定日志使用标准的记录格式</span><br><span class="line">xferlog_std_format=YES</span><br><span class="line"># 设定空闲链接超时时间，这里使用默认/秒。</span><br><span class="line">#idle_session_timeout=600</span><br><span class="line"># 设定最大连接传输时间，这里使用默认，将具体数值留给每个用户具体制定，默认120/秒</span><br><span class="line">#data_connection_timeout=120</span><br><span class="line"># 设定支撑vsftpd服务的宿主用户为手动建立的vsftpd用户。注意：一旦更改宿主用户，需一起与该服务相关的读写文件的读写赋权问题.</span><br><span class="line">nopriv_user=vsftpd</span><br><span class="line"># 设定支持异步传输的功能</span><br><span class="line">#async_abor_enable=YES</span><br><span class="line"># 设置vsftpd的登陆标语</span><br><span class="line">#ftpd_banner=Welcome to blah FTP service.</span><br><span class="line"></span><br><span class="line">#ascii_upload_enable=YES</span><br><span class="line">#ascii_download_enable=YES</span><br><span class="line">#deny_email_enable=YES</span><br><span class="line">#banned_email_file=/etc/vsftpd/banned_emails</span><br><span class="line">#chroot_local_user=YES</span><br><span class="line">#chroot_list_enable=YES</span><br><span class="line">#chroot_list_file=/etc/vsftpd/chroot_list</span><br><span class="line"></span><br><span class="line"># 设定vsftpd服务工作在standalone模式下。</span><br><span class="line"># 所谓standalone模式就是该服务拥有自己的守护进程，在ps -A可以看出vsftpd的守护进程名。</span><br><span class="line"># 如果不想工作在standalone模式下，可以选择SuperDaemon模式，注释掉即可。</span><br><span class="line"># 在该模式下vsftpd将没有自己的守护进程，而是由超级守护进程Xinetd全权代理，与此同时，vsftpd服务的许多功能，将得不到实现。</span><br><span class="line">listen=YES</span><br><span class="line">listen_ipv6=NO</span><br><span class="line"></span><br><span class="line"># 设定pam服务下的vsftpd验证配置文件名。因此，PAM验证将参考/etc/pam.d/下的vsftpd文件配置。</span><br><span class="line">pam_service_name=vsftpd</span><br><span class="line"># 设定userlist_file中的用户将不能使用ftp</span><br><span class="line">userlist_enable=YES</span><br><span class="line"># 设定支持TCPwrappers</span><br><span class="line">tcp_wrappers=YES</span><br><span class="line"></span><br><span class="line">########## 以下是关于虚拟用户支持的重要配置项目，需手动添加。 ##########</span><br><span class="line"># 启用虚拟用户功能</span><br><span class="line">guest_enable=YES</span><br><span class="line"> </span><br><span class="line"># 指定虚拟的宿主用户</span><br><span class="line">guest_username=vsftpd</span><br><span class="line"> </span><br><span class="line"># 设定虚拟用户的权限符合他们的宿主用户</span><br><span class="line">virtual_use_local_privs=YES</span><br><span class="line"> </span><br><span class="line"># 设定虚拟用户个人vsftp的配置文件存放路劲。</span><br><span class="line"># 这个被指定的目录里，将被存放每个虚拟用户个性的配置文件，注意的地方是：配置文件名必须和虚拟用户名相同。</span><br><span class="line">user_config_dir=/muxin/config/vconf</span><br><span class="line"> </span><br><span class="line"># 禁止反向域名解析，若是没有添加这个参数可能会出现用户登陆较慢，或则客户链接不上ftp的现象</span><br><span class="line">reverse_lookup_enable=NO</span><br><span class="line"></span><br><span class="line"># 被动模式</span><br><span class="line">listen_port=21</span><br><span class="line">pasv_enable=YES</span><br><span class="line">pasv_min_port=10060</span><br><span class="line">pasv_max_port=10090</span><br><span class="line">pasv_address=192.168.1.186</span><br><span class="line">pasv_addr_resolve=YES</span><br><span class="line">··········vi end</span><br></pre></td></tr></table></figure>
+<h2 id="建立vsftpd的日志文件"><a href="#建立vsftpd的日志文件" class="headerlink" title="建立vsftpd的日志文件"></a>建立vsftpd的日志文件</h2><p>建立vsftpd的日志文件，并更改属主为vsftpd的服务宿主用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># touch /muxin/logs/vsftpd.log</span><br><span class="line"># chown vsftpd.vsftpd /muxin/logs/vsftpd.log</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置虚拟用户"><a href="#配置虚拟用户" class="headerlink" title="配置虚拟用户"></a>配置虚拟用户</h2><ul>
+<li><p>建立虚拟用户配置文件的存放路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /muxin/config/vconf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立一个虚拟用户名单文件，用来记录虚拟用户的账号和密码,格式为：一行用户名，一行密码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># vi /muxin/config/passwd</span><br><span class="line"></span><br><span class="line">··········vi begin··········</span><br><span class="line">devftp</span><br><span class="line">123456</span><br><span class="line">··········vi end··········</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成虚拟用户数据文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># db_load -T -t hash -f /muxin/config/passwd /muxin/config/passwd.db</span><br><span class="line"># chmod 600 /muxin/config/passwd.db</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>需要注意的是，以后对虚拟用户的增删操作完之后需要再次执行上述命令，使其生成新的数据文件。</p>
+<h2 id="设置PAM验证文件，并制定虚拟用户数据库文件进行读取"><a href="#设置PAM验证文件，并制定虚拟用户数据库文件进行读取" class="headerlink" title="设置PAM验证文件，并制定虚拟用户数据库文件进行读取"></a>设置PAM验证文件，并制定虚拟用户数据库文件进行读取</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># cp /etc/pam.d/vsftpd /etc/pam.d/vsftpd.backup</span><br><span class="line"># vi /etc/pam.d/vsftpd</span><br><span class="line"></span><br><span class="line">··········vi begin··········</span><br><span class="line">#%PAM-1.0</span><br><span class="line">auth    sufficient      /lib64/security/pam_userdb.so     db=/muxin/config/passwd</span><br><span class="line">account sufficient      /lib64/security/pam_userdb.so     db=/muxin/config/passwd</span><br><span class="line">··········vi end··········</span><br></pre></td></tr></table></figure>
+<h2 id="虚拟用户的配置"><a href="#虚拟用户的配置" class="headerlink" title="虚拟用户的配置"></a>虚拟用户的配置</h2><ul>
+<li>定制虚拟用户模板配置文件（虚拟用户的配置文件名需要和虚拟用户一致，因为在登录ftp时输入相应的用户名之后会根据名称去加载相应的配置文件）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># vi /muxin/config/vconf/devftp</span><br><span class="line"></span><br><span class="line">··········vi begin··········</span><br><span class="line"># 指定虚拟用户仓库的具路径</span><br><span class="line">local_root=/vsftpd/devftp</span><br><span class="line"># 设定不允许匿名访问</span><br><span class="line">anonymous_enable=NO</span><br><span class="line"># 允许写的操作</span><br><span class="line">write_enable=YES</span><br><span class="line"># 上传文件的权限掩码</span><br><span class="line">local_umask=022</span><br><span class="line"># 不允许匿名上传</span><br><span class="line">anon_upload_enable=NO</span><br><span class="line"># 不允许匿名用户建立目录</span><br><span class="line">anon_mkdir_write_enable=NO</span><br><span class="line"># 设定空闲链接超时时间</span><br><span class="line">idle_session_timeout=300</span><br><span class="line"># 设定单次传输最大时间</span><br><span class="line">data_connection_timeout=1000</span><br><span class="line"># 设定并发客户端的访问数量</span><br><span class="line">max_clients=0</span><br><span class="line"># 设定客户端的最大线程数</span><br><span class="line">max_per_ip=0</span><br><span class="line"># 设定用户的最大传输速率，单位b/s</span><br><span class="line">local_max_rate=0</span><br><span class="line">··········vi end··········</span><br><span class="line"></span><br><span class="line"># mkdir -p /vsftpd/devftp</span><br><span class="line"># chmod -R 777 /vsftpd/devftp</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="随便建立个文件方便后续检测是否安装成功"><a href="#随便建立个文件方便后续检测是否安装成功" class="headerlink" title="随便建立个文件方便后续检测是否安装成功"></a>随便建立个文件方便后续检测是否安装成功</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># touch /vsftpd/devftp/dev</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://yq.aliyun.com/articles/608725" target="_blank" rel="noopener">ECS服务器vsftpd无法使用主动模式</a><br><a href="https://www.cnblogs.com/linn/p/4169986.html?spm=a2c4e.11153940.blogcont608725.14.67342e39c8QPFo" target="_blank" rel="noopener">vsftpd设置被动模式</a><br><a href="https://www.cnblogs.com/Confession/p/6813227.html" target="_blank" rel="noopener">简介vsftpd及搭建配置</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FTP-VSFTPD/" rel="tag"># FTP,VSFTPD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/03/CentOS7搭建Nginx/" rel="next" title="CentOS7搭建Nginx">
+                <i class="fa fa-chevron-left"></i> CentOS7搭建Nginx
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">张亲</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#登陆方式"><span class="nav-number">1.1.</span> <span class="nav-text">登陆方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Port模式（主动模式）"><span class="nav-number">1.2.</span> <span class="nav-text">Port模式（主动模式）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pasv模式（被动方式）"><span class="nav-number">1.3.</span> <span class="nav-text">Pasv模式（被动方式）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器准备"><span class="nav-number">2.1.</span> <span class="nav-text">服务器准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭SELINUX"><span class="nav-number">2.2.</span> <span class="nav-text">关闭SELINUX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装并设置开机自启"><span class="nav-number">2.3.</span> <span class="nav-text">安装并设置开机自启</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建vsftpd虚拟宿主用户"><span class="nav-number">3.1.</span> <span class="nav-text">创建vsftpd虚拟宿主用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改vsftpd的配置文件"><span class="nav-number">3.2.</span> <span class="nav-text">修改vsftpd的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立vsftpd的日志文件"><span class="nav-number">3.3.</span> <span class="nav-text">建立vsftpd的日志文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置虚拟用户"><span class="nav-number">3.4.</span> <span class="nav-text">配置虚拟用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置PAM验证文件，并制定虚拟用户数据库文件进行读取"><span class="nav-number">3.5.</span> <span class="nav-text">设置PAM验证文件，并制定虚拟用户数据库文件进行读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟用户的配置"><span class="nav-number">3.6.</span> <span class="nav-text">虚拟用户的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随便建立个文件方便后续检测是否安装成功"><span class="nav-number">3.7.</span> <span class="nav-text">随便建立个文件方便后续检测是否安装成功</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张亲</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

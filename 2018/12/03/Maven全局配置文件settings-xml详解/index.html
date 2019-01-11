@@ -109,13 +109,14 @@
 
 
   <meta name="description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
+<meta name="keywords" content="Maven">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Maven全局配置文件settings.xml详解">
 <meta property="og:url" content="http://yoursite.com/2018/12/03/Maven全局配置文件settings-xml详解/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
 <meta property="og:description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-03T03:23:23.811Z">
+<meta property="og:updated_time" content="2019-01-11T13:28:59.703Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Maven全局配置文件settings.xml详解">
 <meta name="twitter:description" content="概要settings.xml有什么用？如果在Eclipse中使用过Maven插件，想必会有这个经验：配置settings.xml文件的路径。  settings.xml文件是干什么的，为什么要配置它呢？从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。  Setti">
@@ -342,12 +343,24 @@
                 
               
 
-              <time title="Created: 2018-12-03 10:57:11 / Modified: 11:23:23" itemprop="dateCreated datePublished" datetime="2018-12-03T10:57:11+08:00">2018-12-03</time>
+              <time title="Created: 2018-12-03 10:57:11" itemprop="dateCreated datePublished" datetime="2018-12-03T10:57:11+08:00">2018-12-03</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-11 21:28:59" itemprop="dateModified" datetime="2019-01-11T21:28:59+08:00">2019-01-11</time>
               
             
           </span>
@@ -385,6 +398,7 @@
 <li>settings.xml文件是干什么的，为什么要配置它呢？<br>从settings.xml的文件名就可以看出，它是用来设置maven参数的配置文件。并且，settings.xml是maven的全局配置文件。而pom.xml文件是所在项目的局部配置。</li>
 </ul>
 <p>Settings.xml中包含类似本地仓储位置、修改远程仓储服务器、认证信息等配置。</p>
+<a id="more"></a>
 <h2 id="settings-xml文件位置"><a href="#settings-xml文件位置" class="headerlink" title="settings.xml文件位置"></a>settings.xml文件位置</h2><p>settings.xml文件一般存在于两个位置：<br>全局配置: ${M2_HOME}/conf/settings.xml<br>用户配置:<br>{user.home} 和和所有其他系统属性只能在3.0+版本上使用。请注意windows和Linux使用变量的区别。</p>
 <h2 id="配置优先级"><a href="#配置优先级" class="headerlink" title="配置优先级"></a>配置优先级</h2><p>需要注意的是：局部配置优先于全局配置。<br>配置优先级从高到低：pom.xml &gt; user settings &gt; global settings<br>如果这些文件同时存在，在应用配置时，会合并它们的内容，如果有重复的配置，优先级高的配置会覆盖优先级低的。</p>
 <h1 id="settings-xml元素详解"><a href="#settings-xml元素详解" class="headerlink" title="settings.xml元素详解"></a>settings.xml元素详解</h1><h2 id="顶级元素概览"><a href="#顶级元素概览" class="headerlink" title="顶级元素概览"></a>顶级元素概览</h2><p>下面列举了settings.xml中的顶级元素</p>
@@ -437,6 +451,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Maven/" rel="tag"># Maven</a>
+          
+        </div>
+      
 
       
       
@@ -456,8 +476,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/12/03/CentOS7-安装-Nginx/" rel="prev" title="CentOS7 安装 Nginx">
-                CentOS7 安装 Nginx <i class="fa fa-chevron-right"></i>
+              <a href="/2018/12/03/CentOS7搭建Nginx/" rel="prev" title="CentOS7搭建Nginx">
+                CentOS7搭建Nginx <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -528,7 +548,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -551,7 +571,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -586,7 +608,17 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">tags</span>
                   
                 </div>
