@@ -111,14 +111,14 @@
   <meta name="description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
 <meta name="keywords" content="Zookeeper">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZooKeeper集群的安装、配置、高可用测试">
-<meta property="og:url" content="http://yoursite.com/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/index.html">
+<meta property="og:title" content="CentOS7搭建ZooKeeper集群">
+<meta property="og:url" content="http://yoursite.com/2018/07/16/CentOS7搭建ZooKeeper集群/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
 <meta property="og:description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-23T16:54:39.050Z">
+<meta property="og:updated_time" content="2019-01-11T13:42:32.021Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZooKeeper集群的安装、配置、高可用测试">
+<meta name="twitter:title" content="CentOS7搭建ZooKeeper集群">
 <meta name="twitter:description" content="Dubbo建议使用ZooKeeper作为服务的注册中心。ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。">
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/16/CentOS7搭建ZooKeeper集群/"/>
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>ZooKeeper集群的安装、配置、高可用测试 | 张亲的技术博客</title>
+  <title>CentOS7搭建ZooKeeper集群 | 张亲的技术博客</title>
   
 
 
@@ -301,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/16/ZooKeeper集群的安装、配置、高可用测试/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/16/CentOS7搭建ZooKeeper集群/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="张亲">
@@ -318,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ZooKeeper集群的安装、配置、高可用测试
+          <h1 class="post-title" itemprop="name headline">CentOS7搭建ZooKeeper集群
               
             
           </h1>
@@ -360,7 +360,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-07-24 00:54:39" itemprop="dateModified" datetime="2018-07-24T00:54:39+08:00">2018-07-24</time>
+                <time title="Modified: 2019-01-11 21:42:32" itemprop="dateModified" datetime="2019-01-11T21:42:32+08:00">2019-01-11</time>
               
             
           </span>
@@ -377,7 +377,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/基于Dubbo的分布式系统架构实战/" itemprop="url" rel="index"><span itemprop="name">基于Dubbo的分布式系统架构实战</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
 
                 
                 
@@ -601,6 +601,8 @@
                 <div class="site-state-item site-state-tags">
                   
                     
+                    
+                      
                     
                       
                     
