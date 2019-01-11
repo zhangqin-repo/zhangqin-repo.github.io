@@ -108,18 +108,17 @@
 
 
 
-  <meta name="description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。在《基于Dubbo的分布式系统架构实战》这个专题里，我将写出我的当时学习Dubbo的一些心得体会。">
-<meta name="keywords" content="虚拟化">
+  <meta name="description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="虚拟机规划">
 <meta property="og:url" content="http://yoursite.com/2018/07/16/虚拟机规划/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
-<meta property="og:description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。在《基于Dubbo的分布式系统架构实战》这个专题里，我将写出我的当时学习Dubbo的一些心得体会。">
+<meta property="og:description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-11-21T05:59:19.153Z">
+<meta property="og:updated_time" content="2019-01-11T13:56:37.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="虚拟机规划">
-<meta name="twitter:description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。在《基于Dubbo的分布式系统架构实战》这个专题里，我将写出我的当时学习Dubbo的一些心得体会。">
+<meta name="twitter:description" content="学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。">
 
 
 
@@ -360,7 +359,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-11-21 13:59:19" itemprop="dateModified" datetime="2018-11-21T13:59:19+08:00">2018-11-21</time>
+                <time title="Modified: 2019-01-11 21:56:37" itemprop="dateModified" datetime="2019-01-11T21:56:37+08:00">2019-01-11</time>
               
             
           </span>
@@ -377,7 +376,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/基于Dubbo的分布式系统架构实战/" itemprop="url" rel="index"><span itemprop="name">基于Dubbo的分布式系统架构实战</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
 
                 
                 
@@ -411,198 +410,146 @@
       
 
       
-        <p>学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。在《基于Dubbo的分布式系统架构实战》这个专题里，我将写出我的当时学习Dubbo的一些心得体会。<br><a id="more"></a></p>
-<p>既然分布式离不开集群，我这里就列出我自己集群的清单，后续的文章将会使用这些虚拟机搭建集群环境。</p>
+        <p>学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。</p>
+<a id="more"></a>
+<h1 id="我的虚拟机清单"><a href="#我的虚拟机清单" class="headerlink" title="我的虚拟机清单"></a>我的虚拟机清单</h1><p>既然分布式离不开集群，我这里就列出我自己集群的清单，后续的文章将会使用这些虚拟机搭建集群环境。</p>
 <style>table th:first-child {width: 200px;}</style>
 <style>table th:nth-child(2) {width: 40px;}</style>
 <style>table th:nth-child(3) {width: 40px;}</style>
 <style>table th:nth-child(4) {width: 40px;}</style>
 
-
-<h3 id="192-168-1-11X-虚拟机管理"><a href="#192-168-1-11X-虚拟机管理" class="headerlink" title="192.168.1.11X 虚拟机管理"></a>192.168.1.11X 虚拟机管理</h3><table>
+<table>
 <thead>
 <tr>
-<th>主机名</th>
+<th>Server Name</th>
 <th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
+<th>Memory</th>
+<th>Disk</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>192.168.1.111_vcenter</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>vCenter Server 账号/密码：root/12345678</td>
+<td>/</td>
+<td>/</td>
+<td>/</td>
 </tr>
 <tr>
 <td>192.168.1.112_centos7</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>CentOS7 系统模版，服务器账号/密码：root/123456</td>
 </tr>
 <tr>
-<td>192.168.1.118_windows7</td>
-<td>2</td>
-<td>4</td>
-<td>200</td>
-<td>windows7 旗舰版，用于远程管理虚拟机 账号/密码：administrator/123</td>
+<td>192.168.1.113_dns</td>
+<td>1</td>
+<td>1</td>
+<td>20</td>
 </tr>
-</tbody>
-</table>
-<h3 id="192-168-1-12X-数据库集群"><a href="#192-168-1-12X-数据库集群" class="headerlink" title="192.168.1.12X 数据库集群"></a>192.168.1.12X 数据库集群</h3><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>192.168.1.121_mysql01</td>
 <td>2</td>
-<td>2</td>
+<td>4</td>
 <td>50</td>
-<td>软件：mysql-5.7.12，数据库账号/密码：root/123456</td>
 </tr>
 <tr>
 <td>192.168.1.121_mysql02</td>
 <td>2</td>
-<td>2</td>
+<td>4</td>
 <td>50</td>
-<td>软件：mysql-5.7.12，数据库账号/密码：root/123456</td>
 </tr>
-</tbody>
-</table>
-<h3 id="192-168-1-13X-Zookeeper集群"><a href="#192-168-1-13X-Zookeeper集群" class="headerlink" title="192.168.1.13X Zookeeper集群"></a>192.168.1.13X Zookeeper集群</h3><table>
-<thead>
 <tr>
-<th>主机名</th>
-<th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>192.168.1.130_dubboadmin</td>
+<td>192.168.1.131_dubboadmin</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：dubbo-admin-2.5.3</td>
 </tr>
 <tr>
 <td>192.168.1.131_zk01</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：zookeeper-3.4.6、jdk1.8.0_101</td>
 </tr>
 <tr>
 <td>192.168.1.132_zk02</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：zookeeper-3.4.6、jdk1.8.0_101</td>
 </tr>
 <tr>
 <td>192.168.1.133_zk03</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：zookeeper-3.4.6、jdk1.8.0_101</td>
 </tr>
-</tbody>
-</table>
-<h3 id="192-168-1-14X-Redis集群"><a href="#192-168-1-14X-Redis集群" class="headerlink" title="192.168.1.14X Redis集群"></a>192.168.1.14X Redis集群</h3><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>192.168.1.141_redis_master</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：redis-3.2.4</td>
 </tr>
 <tr>
 <td>192.168.1.142_redis_slave01</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：redis-3.2.4</td>
 </tr>
 <tr>
 <td>192.168.1.143_redis_slave02</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>软件：redis-3.2.4</td>
 </tr>
-</tbody>
-</table>
-<h3 id="192-168-1-18X-DEVOPS环境"><a href="#192-168-1-18X-DEVOPS环境" class="headerlink" title="192.168.1.18X DEVOPS环境"></a>192.168.1.18X DEVOPS环境</h3><table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>192.168.1.181_gitlab</td>
 <td>2</td>
 <td>4</td>
 <td>50</td>
-<td>软件：</td>
 </tr>
-</tbody>
-</table>
-<p>192.168.1.181_svn|1|1|50|软件：svn-1.7.14、apache-2.4.6、svnadmin-3.0.5、apache-tomcat-7.0.63、jdk1.8.0_101。访问地址：<a href="http://192.168.1.181:8080/。账号/密码：admin/123456、zhangqin/123456。" target="_blank" rel="noopener">http://192.168.1.181:8080/。账号/密码：admin/123456、zhangqin/123456。</a><br>192.168.1.182_nexus|1|1|50|软件：nexus-2.13.0<br>192.168.1.183_jenkins|1|1|50|<br>192.168.1.184_sonar|1|1|20|</p>
-<h3 id="192-168-1-19X-应用服务器"><a href="#192-168-1-19X-应用服务器" class="headerlink" title="192.168.1.19X 应用服务器"></a>192.168.1.19X 应用服务器</h3><table>
-<thead>
 <tr>
-<th>主机名</th>
-<th>CPU</th>
-<th>内存</th>
-<th>硬盘</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>192.168.1.191_sso</td>
+<td>192.168.1.182_svn</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>单点系统</td>
 </tr>
 <tr>
-<td>192.168.1.192_ca</td>
+<td>192.168.1.183_nexus</td>
 <td>1</td>
 <td>1</td>
 <td>20</td>
-<td>用户中心</td>
+</tr>
+<tr>
+<td>192.168.1.184_jenkins</td>
+<td>2</td>
+<td>4</td>
+<td>50</td>
+</tr>
+<tr>
+<td>192.168.1.185_sonar</td>
+<td>1</td>
+<td>1</td>
+<td>20</td>
+</tr>
+<tr>
+<td>192.168.1.186_ftp</td>
+<td>1</td>
+<td>1</td>
+<td>20</td>
 </tr>
 </tbody>
 </table>
+<h1 id="虚拟机通用约定"><a href="#虚拟机通用约定" class="headerlink" title="虚拟机通用约定"></a>虚拟机通用约定</h1><h2 id="所有服务器均有以下目录"><a href="#所有服务器均有以下目录" class="headerlink" title="所有服务器均有以下目录"></a>所有服务器均有以下目录</h2><ul>
+<li><code>/muxin</code></li>
+<li><code>/muxin/data</code></li>
+<li><code>/muxin/appserver</code></li>
+<li><code>/muxin/logs</code></li>
+<li><code>/muxin/config</code></li>
+<li><code>/muxin/download</code></li>
+</ul>
+<h2 id="所有服务都安装-配置了以下项目"><a href="#所有服务都安装-配置了以下项目" class="headerlink" title="所有服务都安装/配置了以下项目"></a>所有服务都安装/配置了以下项目</h2><ul>
+<li><code>SELINUX=disabled</code></li>
+<li><code>lrzsz</code></li>
+</ul>
 
       
     </div>
@@ -623,12 +570,6 @@
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/虚拟化/" rel="tag"># 虚拟化</a>
-          
-        </div>
       
 
       
@@ -746,7 +687,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -793,7 +734,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">tags</span>
                   
                 </div>
@@ -828,7 +771,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-11X-虚拟机管理"><span class="nav-number">1.</span> <span class="nav-text">192.168.1.11X 虚拟机管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-12X-数据库集群"><span class="nav-number">2.</span> <span class="nav-text">192.168.1.12X 数据库集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-13X-Zookeeper集群"><span class="nav-number">3.</span> <span class="nav-text">192.168.1.13X Zookeeper集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-14X-Redis集群"><span class="nav-number">4.</span> <span class="nav-text">192.168.1.14X Redis集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-18X-DEVOPS环境"><span class="nav-number">5.</span> <span class="nav-text">192.168.1.18X DEVOPS环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#192-168-1-19X-应用服务器"><span class="nav-number">6.</span> <span class="nav-text">192.168.1.19X 应用服务器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#我的虚拟机清单"><span class="nav-number">1.</span> <span class="nav-text">我的虚拟机清单</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟机通用约定"><span class="nav-number">2.</span> <span class="nav-text">虚拟机通用约定</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#所有服务器均有以下目录"><span class="nav-number">2.1.</span> <span class="nav-text">所有服务器均有以下目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所有服务都安装-配置了以下项目"><span class="nav-number">2.2.</span> <span class="nav-text">所有服务都安装/配置了以下项目</span></a></li></ol></li></ol></div>
             
 
           </div>
