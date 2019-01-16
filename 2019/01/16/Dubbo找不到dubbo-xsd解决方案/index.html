@@ -108,20 +108,27 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="张亲的技术博客">
-<meta property="og:url" content="http://yoursite.com/tags/Zookeeper/index.html">
+  <meta name="description" content="Eclpise构建Dubbo项目时，可能出现dubbo的xml文件提示错误。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo找不到dubbo.xsd解决方案">
+<meta property="og:url" content="http://yoursite.com/2019/01/16/Dubbo找不到dubbo-xsd解决方案/index.html">
 <meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:description" content="Eclpise构建Dubbo项目时，可能出现dubbo的xml文件提示错误。">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/Dubbo找不到dubbo.xsd解决方案/image01.png">
+<meta property="og:image" content="http://yoursite.com/images/Dubbo找不到dubbo.xsd解决方案/image02.png">
+<meta property="og:updated_time" content="2019-01-16T02:14:18.208Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="张亲的技术博客">
+<meta name="twitter:title" content="Dubbo找不到dubbo.xsd解决方案">
+<meta name="twitter:description" content="Eclpise构建Dubbo项目时，可能出现dubbo的xml文件提示错误。">
+<meta name="twitter:image" content="http://yoursite.com/images/Dubbo找不到dubbo.xsd解决方案/image01.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Zookeeper/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/16/Dubbo找不到dubbo-xsd解决方案/"/>
 
 
 
@@ -131,7 +138,7 @@
   };
 </script>
 
-  <title>Tag: Zookeeper | 张亲的技术博客</title>
+  <title>Dubbo找不到dubbo.xsd解决方案 | 张亲的技术博客</title>
   
 
 
@@ -180,7 +187,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -256,19 +263,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -293,58 +287,174 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Zookeeper<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/16/Dubbo找不到dubbo-xsd解决方案/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张亲">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张亲的技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/07/16/CentOS7搭建ZooKeeper集群/" itemprop="url">
-              
-                <span itemprop="name">CentOS7搭建ZooKeeper集群</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Dubbo找不到dubbo.xsd解决方案
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-16T16:39:54+08:00"
-              content="2018-07-16" >
-          07-16
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
 
+              
+                
+              
+
+              <time title="Created: 2019-01-16 09:59:09 / Modified: 10:14:18" itemprop="dateCreated datePublished" datetime="2019-01-16T09:59:09+08:00">2019-01-16</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Eclpise构建Dubbo项目时，可能出现dubbo的xml文件提示错误。</p>
+<a id="more"></a>
+<h1 id="下载dubbo-xsd到本地"><a href="#下载dubbo-xsd到本地" class="headerlink" title="下载dubbo.xsd到本地"></a>下载dubbo.xsd到本地</h1><p><a href="https://github.com/apache/incubator-dubbo/blob/master/dubbo-config/dubbo-config-spring/src/main/resources/META-INF/dubbo.xsd" target="_blank" rel="noopener">官方下载</a></p>
+<p><a href="/images/Dubbo找不到dubbo.xsd解决方案/dubbo.xsd">本地下载</a></p>
+<h1 id="Eclipse-gt-Preferences-gt-XML-gt-XML-Catalog-gt-Add"><a href="#Eclipse-gt-Preferences-gt-XML-gt-XML-Catalog-gt-Add" class="headerlink" title="Eclipse-&gt;Preferences-&gt;XML-&gt;XML Catalog-&gt;Add"></a>Eclipse-&gt;Preferences-&gt;XML-&gt;XML Catalog-&gt;Add</h1><p><img src="/images/Dubbo找不到dubbo.xsd解决方案/image01.png" alt=""><br><img src="/images/Dubbo找不到dubbo.xsd解决方案/image02.png" alt=""></p>
+<h1 id="重启Eclipse"><a href="#重启Eclipse" class="headerlink" title="重启Eclipse"></a>重启Eclipse</h1>
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/11/CentOS7搭建FTP（被动模式）/" rel="next" title="CentOS7搭建FTP（被动模式）">
+                <i class="fa fa-chevron-left"></i> CentOS7搭建FTP（被动模式）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/16/使用vSphereClient管理虚拟机/" rel="prev" title="使用vSphereClient管理虚拟机">
+                使用vSphereClient管理虚拟机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -365,8 +475,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -468,6 +587,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载dubbo-xsd到本地"><span class="nav-number">1.</span> <span class="nav-text">下载dubbo.xsd到本地</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Eclipse-gt-Preferences-gt-XML-gt-XML-Catalog-gt-Add"><span class="nav-number">2.</span> <span class="nav-text">Eclipse-&gt;Preferences-&gt;XML-&gt;XML Catalog-&gt;Add</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重启Eclipse"><span class="nav-number">3.</span> <span class="nav-text">重启Eclipse</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -596,6 +731,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
 
   
 
