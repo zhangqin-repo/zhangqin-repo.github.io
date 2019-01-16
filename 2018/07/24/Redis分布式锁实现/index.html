@@ -2,15 +2,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
   
 
 
@@ -18,11 +9,8 @@
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
-
-
-
 
 
 
@@ -50,6 +38,10 @@
 
 
 
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
 
 
 
@@ -58,57 +50,36 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
-
-
-
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
 
 
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Muse',
-    version: '6.6.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
+  <meta name="keywords" content="Redis," />
 
 
 
 
-  <meta name="description" content="分布式锁一般有三种实现方式：1. 数据库乐观锁；2. 基于Redis的分布式锁；3. 基于ZooKeeper的分布式锁。 我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-30">
+
+
+
+
+
+
+<meta name="description" content="分布式锁一般有三种实现方式：1. 数据库乐观锁；2. 基于Redis的分布式锁；3. 基于ZooKeeper的分布式锁。 我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-30">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis分布式锁实现">
@@ -123,6 +94,29 @@
 
 
 
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
 
 
 
@@ -130,11 +124,7 @@
 
 
 
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
+
 
   <title>Redis分布式锁实现 | 张亲的技术博客</title>
   
@@ -145,36 +135,6 @@
 
 
 
-
-
-
-
-  <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
-
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
-
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
 
 </head>
 
@@ -194,17 +154,19 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">张亲的技术博客</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-    
+      
+        <p class="site-subtitle">谁辜负过自己，说不上可惜</p>
+      
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -212,55 +174,35 @@
   </div>
 </div>
 
-
-
 <nav class="site-nav">
+  
+
   
     <ul id="menu" class="menu">
       
         
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
       
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
-
-  </li>
         
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
       
-    
 
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
-
-  </li>
-
-      
       
     </ul>
-  
-
-  
-    
-
   
 
   
@@ -268,20 +210,12 @@
 
 
 
-  
-
-
-
-</div>
+ </div>
     </header>
-
-    
-
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
           <div id="content" class="content">
             
 
@@ -292,8 +226,6 @@
 
   
   
-  
-
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -318,19 +250,11 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis分布式锁实现
-              
-            
-          </h1>
+          <h1 class="post-title" itemprop="name headline">Redis分布式锁实现</h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -338,18 +262,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-24 13:11:42 / Modified: 13:29:37" itemprop="dateCreated datePublished" datetime="2018-07-24T13:11:42+08:00">2018-07-24</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-24T13:11:42+08:00">
+                2018-07-24
+              </time>
             
 
             
-              
 
-              
             
           </span>
 
@@ -365,7 +284,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/代码片段/" itemprop="url" rel="index"><span itemprop="name">代码片段</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/代码片段/" itemprop="url" rel="index">
+                    <span itemprop="name">代码片段</span>
+                  </a>
+                </span>
 
                 
                 
@@ -406,9 +329,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Set;</span><br><span class="line">import java.util.concurrent.CopyOnWriteArrayList;</span><br><span class="line">import java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.collections.CollectionUtils;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.dao.DataAccessException;</span><br><span class="line">import org.springframework.data.redis.connection.RedisConnection;</span><br><span class="line">import org.springframework.data.redis.connection.RedisConnectionFactory;</span><br><span class="line">import org.springframework.data.redis.core.*;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * </span><br><span class="line"> * ClassName: RedisBatchLockRegistry </span><br><span class="line"> * @Description: Redis分布式锁，支持批量获取和释放锁</span><br><span class="line"> * </span><br><span class="line"> * org.springframework.integration.redis.util.RedisLockRegistry 存在两个问题：</span><br><span class="line"> * 1.不支持锁的批量获取和释放</span><br><span class="line"> * 2.锁的重试时间只能为100毫秒</span><br><span class="line"> * </span><br><span class="line"> * 该类参考自RedisLockRegistry，与之对比不同点为：</span><br><span class="line"> * 1.增加了锁的批量获取和释放</span><br><span class="line"> * 2.去除了本地锁实现（RedisLockRegistry的方式实现实际上为Redis锁＋本地锁双重锁）</span><br><span class="line"> * </span><br><span class="line"> * @author zhangq</span><br><span class="line"> * @date 2017年5月24日</span><br><span class="line"> *</span><br><span class="line"> * =================================================================================================</span><br><span class="line"> *     Task ID			  Date			     Author		      Description</span><br><span class="line"> * ----------------+----------------+-------------------+-------------------------------------------</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class RedisBatchLockRegistry &#123;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * Logger</span><br><span class="line">	 */</span><br><span class="line">	private static final Logger LOG = LoggerFactory.getLogger(RedisBatchLockRegistry.class);</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * Redis模版</span><br><span class="line">	 */</span><br><span class="line">	@Autowired</span><br><span class="line">	private RedisTemplate&lt;String, String&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">	public RedisBatchLockRegistry()&#123;&#125;</span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * &lt;p&gt;Title: 初始化&lt;/p&gt; </span><br><span class="line">	 * &lt;p&gt;Description: &lt;/p&gt; </span><br><span class="line">	 * @param connectionFactory</span><br><span class="line">	 */</span><br><span class="line">	public RedisBatchLockRegistry(RedisConnectionFactory connectionFactory) &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * @Description: 尝试批量获取锁</span><br><span class="line">	 * @param list</span><br><span class="line">	 * @param maxWait</span><br><span class="line">	 * @return boolean  </span><br><span class="line">	 * @author zhangq</span><br><span class="line">	 * @throws InterruptedException </span><br><span class="line">	 * @date 2017年5月27日</span><br><span class="line">	 */</span><br><span class="line">	@SuppressWarnings(&quot;rawtypes&quot;)</span><br><span class="line">	public boolean tryLock(final Set&lt;String&gt; keys, long maxWait, long timeout) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			LOG.info(&quot;尝试获取锁：&#123;&#125;&quot;, keys);</span><br><span class="line"></span><br><span class="line">			// 需要获取的锁</span><br><span class="line">			final List&lt;String&gt; needLocking = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line">			needLocking.addAll(keys);</span><br><span class="line"></span><br><span class="line">			// 已经获取的锁</span><br><span class="line">			List&lt;String&gt; locked = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">			// 获取等待时间的最后时间段</span><br><span class="line">			long expireAt = System.currentTimeMillis() + maxWait;</span><br><span class="line"></span><br><span class="line">			// 循环判断锁是否一直存在</span><br><span class="line">			while (System.currentTimeMillis() &lt; expireAt) &#123;</span><br><span class="line"></span><br><span class="line">				// 通过管道批量获取锁</span><br><span class="line">				LOG.info(&quot;进入tryLock while，needLocking：&#123;&#125;&quot;, needLocking);</span><br><span class="line">				List&lt;Object&gt; results = redisTemplate.executePipelined(new RedisCallback() &#123;</span><br><span class="line"></span><br><span class="line">					@Override</span><br><span class="line">					public Object doInRedis(RedisConnection connection) throws DataAccessException &#123;</span><br><span class="line">						LOG.info(&quot;connection:&#123;&#125;, needLocking:&#123;&#125;&quot;, connection, needLocking);</span><br><span class="line">						String value = System.currentTimeMillis() + &quot;&quot;;</span><br><span class="line">						for (String key : needLocking) &#123;</span><br><span class="line">							LOG.info(&quot;key :&#123;&#125;&quot;, key);</span><br><span class="line">							// 如果不存在则 SET。SET if Not eXists。</span><br><span class="line">							connection.setNX(key.getBytes(), value.getBytes());</span><br><span class="line">							// LOG.info(&quot;pipelined setNX result:&#123;&#125;, key:&#123;&#125;,</span><br><span class="line">							// value:&#123;&#125;&quot;, flag, key, key);</span><br><span class="line">						&#125;</span><br><span class="line">						return null;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line"></span><br><span class="line">				// 提交redis执行计数</span><br><span class="line">				LOG.info(&quot;needLocking:&#123;&#125;,results:&#123;&#125;&quot;, needLocking, results);</span><br><span class="line">				for (int i = 0; i &lt; results.size(); i++) &#123;</span><br><span class="line">					// 是否执行成功</span><br><span class="line">					Boolean success = (Boolean) results.get(i);</span><br><span class="line">					// 锁的KEY</span><br><span class="line">					String key = needLocking.get(i);</span><br><span class="line"></span><br><span class="line">					// setnx成功，获得锁</span><br><span class="line">					if (success) &#123;</span><br><span class="line">						// 设置锁的过期时间</span><br><span class="line">						redisTemplate.expire(key, timeout, TimeUnit.MILLISECONDS);</span><br><span class="line">						locked.add(key);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				// 移除已锁定资源</span><br><span class="line">				needLocking.removeAll(locked);</span><br><span class="line"></span><br><span class="line">				// 是否锁住全部资源</span><br><span class="line">				if (CollectionUtils.isEmpty(needLocking)) &#123;</span><br><span class="line">					// 全部资源均已锁住，返回成功true</span><br><span class="line">					return true;</span><br><span class="line">				&#125; else &#123;</span><br><span class="line">					// 补偿处理，防止异常情况下（宕机/重启/连接超时等）导致的锁永不过期</span><br><span class="line">					List&lt;String&gt; exceptionLock = new CopyOnWriteArrayList&lt;String&gt;();</span><br><span class="line">					for (String key : needLocking) &#123;</span><br><span class="line">						String value = redisTemplate.opsForValue().get(key);</span><br><span class="line">						// 当前时间 &gt; 上锁时间 + 超时时间 + 2秒（经验时间），表示为该过期却未过期的数据，即异常数据</span><br><span class="line">						if (null != value &amp;&amp; System.currentTimeMillis() &gt; Long.parseLong(value) + timeout + 2000) &#123;</span><br><span class="line">							exceptionLock.add(key);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					// 删除所有异常的 KEY</span><br><span class="line">					if (CollectionUtils.isNotEmpty(exceptionLock)) &#123;</span><br><span class="line">						unLock(exceptionLock);</span><br><span class="line">					&#125;</span><br><span class="line"></span><br><span class="line">					// 部分资源未能锁住，间隔N毫秒后重试</span><br><span class="line">					Thread.sleep(10);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			// 仍有资源未被锁住（needLocking不为空），释放已锁定的资源，并返回失败false</span><br><span class="line">			if (!CollectionUtils.isEmpty(needLocking)) &#123;</span><br><span class="line">				LOG.info(&quot;can not get the lock, keys:&#123;&#125;&quot;, needLocking);</span><br><span class="line">				unLock(locked);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			LOG.info(&quot;尝试获取锁失败：&#123;&#125;&quot;, e);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * </span><br><span class="line">	 * @Description: 批量释放锁</span><br><span class="line">	 * @param list   </span><br><span class="line">	 * @return void  </span><br><span class="line">	 * @author zhangq</span><br><span class="line">	 * @date 2017年5月27日</span><br><span class="line">	 */</span><br><span class="line">	public void unLock(Collection&lt;String&gt; keys) &#123;</span><br><span class="line">		try&#123;</span><br><span class="line">			// 防止多个服务器处理同一个key需要watch操作(相当于是禁止了其他client处理这个key)</span><br><span class="line">			//redisTemplate.watch(keys);</span><br><span class="line"></span><br><span class="line">			// 批量释放锁</span><br><span class="line">			redisTemplate.delete(keys);</span><br><span class="line"></span><br><span class="line">			// 锁已经过期了，释放watch操作</span><br><span class="line">			//redisTemplate.unwatch();</span><br><span class="line">		&#125;catch (Exception e)&#123;</span><br><span class="line">			LOG.error(&quot;批量释放锁失败!&quot;,e);</span><br><span class="line">		&#125;finally &#123;</span><br><span class="line">			RedisConnectionUtils.unbindConnection(redisTemplate.getConnectionFactory());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
-
-    
-
     
     
     
@@ -416,8 +336,34 @@
     
 
     
-       
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
     
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="张亲 WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="张亲 Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -467,10 +413,17 @@
   </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
           </div>
+          
+
+
           
 
   
@@ -505,95 +458,53 @@
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">21</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
+          <nav class="site-state motion-element">
 
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">14</span>
-                    <span class="site-state-item-name">tags</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-
-          
-          
-
-          
             
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
           
+
+          
+
+          
+          
+
+          
+          
+
           
 
         </div>
@@ -614,18 +525,16 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love" id="animate">
+  <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">张亲</span>
 
   
-
-  
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
@@ -633,13 +542,12 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.6.0</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
 
 
 
 
         
-
 
 
 
@@ -659,10 +567,7 @@
     
 
     
-	
-    
 
-    
   </div>
 
   
@@ -681,11 +586,7 @@
 
 
 
-
-
-
-
-
+  
 
 
 
@@ -705,6 +606,16 @@
 
   
   
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
@@ -713,45 +624,38 @@
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
-
-
-
   
   
-
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
 
 
 
   
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
 
 
 
   
 
 
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
-
-
-
+  
 
 
   
@@ -759,6 +663,36 @@
 
 
 
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
 
   
 
@@ -767,16 +701,6 @@
   
 
   
-
-  
-
-  
-  
-
-  
-
-  
-
   
 
   

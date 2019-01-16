@@ -2,15 +2,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
   
 
 
@@ -18,11 +9,8 @@
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
-
-
-
 
 
 
@@ -50,6 +38,10 @@
 
 
 
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
 
 
 
@@ -58,25 +50,42 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
-
-
-
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="张亲的技术博客">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="张亲的技术博客">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="张亲的技术博客">
 
 
 
@@ -85,13 +94,15 @@
   var CONFIG = {
     root: '/',
     scheme: 'Muse',
-    version: '6.6.0',
+    version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
+    fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
     algolia: {
       applicationID: '',
       apiKey: '',
@@ -103,33 +114,12 @@
 </script>
 
 
-  
-
-
-
-
-  <meta property="og:type" content="website">
-<meta property="og:title" content="张亲的技术博客">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
-<meta property="og:site_name" content="张亲的技术博客">
-<meta property="og:locale" content="default">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="张亲的技术博客">
-
-
-
-
-
 
   <link rel="canonical" href="http://yoursite.com/page/2/"/>
 
 
 
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
+
 
   <title>张亲的技术博客</title>
   
@@ -140,36 +130,6 @@
 
 
 
-
-
-
-
-  <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
-
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
-
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
 
 </head>
 
@@ -190,17 +150,19 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">张亲的技术博客</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-    
+      
+        <p class="site-subtitle">谁辜负过自己，说不上可惜</p>
+      
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -208,55 +170,35 @@
   </div>
 </div>
 
-
-
 <nav class="site-nav">
+  
+
   
     <ul id="menu" class="menu">
       
         
-        
-        
-          
-          <li class="menu-item menu-item-home">
-
-    
-    
-    
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
       
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
-
-  </li>
         
-        
-        
-          
-          <li class="menu-item menu-item-archives">
-
-    
-    
-    
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
       
-    
 
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
-
-  </li>
-
-      
       
     </ul>
-  
-
-  
-    
-
   
 
   
@@ -264,20 +206,12 @@
 
 
 
-  
-
-
-
-</div>
+ </div>
     </header>
-
-    
-
 
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
@@ -288,8 +222,6 @@
 
   
   
-  
-
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -316,20 +248,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/08/29/Swagger2多个包路径扫描匹配支持/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">Swagger2多个包路径扫描匹配支持</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/08/29/Swagger2多个包路径扫描匹配支持/" itemprop="url">Swagger2多个包路径扫描匹配支持</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -337,18 +260,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-08-29 15:57:12 / Modified: 16:00:29" itemprop="dateCreated datePublished" datetime="2018-08-29T15:57:12+08:00">2018-08-29</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-29T15:57:12+08:00">
+                2018-08-29
+              </time>
             
 
             
-              
 
-              
             
           </span>
 
@@ -364,7 +282,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/其他/" itemprop="url" rel="index"><span itemprop="name">其他</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
 
                 
                 
@@ -401,29 +323,21 @@
         
           <p>使用springfox中的 RequestHandlerSelectors.basePackage(“com.xxx”) 只能支持单个包路径的扫描匹配,如果要想支持多个包路径的匹配我们需要修改springfox里面的代码来支持他，现做以下修改来支持多包路径匹配。<br>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/29/Swagger2多个包路径扫描匹配支持/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/29/Swagger2多个包路径扫描匹配支持/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -456,8 +370,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -482,20 +394,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/24/Redis分布式锁实现/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">Redis分布式锁实现</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/24/Redis分布式锁实现/" itemprop="url">Redis分布式锁实现</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -503,18 +406,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-24 13:11:42 / Modified: 13:29:37" itemprop="dateCreated datePublished" datetime="2018-07-24T13:11:42+08:00">2018-07-24</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-24T13:11:42+08:00">
+                2018-07-24
+              </time>
             
 
             
-              
 
-              
             
           </span>
 
@@ -530,7 +428,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/代码片段/" itemprop="url" rel="index"><span itemprop="name">代码片段</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/代码片段/" itemprop="url" rel="index">
+                    <span itemprop="name">代码片段</span>
+                  </a>
+                </span>
 
                 
                 
@@ -569,29 +471,21 @@
 <p>我们最先做电商+零售的库存业务时，选用的是数据库乐观锁，但是在并发较大时性能不太乐观。后来重构考虑使用Redis来实现分布式锁，采用了Spring的RedisLockRegistry。在压测时发现单一销售业务下性能比较稳定，但是在采购、批发等业务里，动则就要给一单2000-3000款商品，高并发下（重点指混合场景下的并发）RedisLockRegistry在此场景的的缺点就暴露出来了：不可批量获取和释放锁，我们订单下的所有商品加锁，会消耗大量的网络资源且获取整单商品锁的时间和不可控制。</p>
 <p>于是我们在参照RedisLockRegistry的技术上，写了RedisBatchLockRegistry。再压测时，我们原先场景并发提高10倍的基础上，性能依然满足要求。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/24/Redis分布式锁实现/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/24/Redis分布式锁实现/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -624,8 +518,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -650,20 +542,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/20/Dubbo管理控制台的安装/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">Dubbo管理控制台的安装</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/20/Dubbo管理控制台的安装/" itemprop="url">Dubbo管理控制台的安装</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -671,30 +554,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-20 10:19:40" itemprop="dateCreated datePublished" datetime="2018-07-20T10:19:40+08:00">2018-07-20</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-20T10:19:40+08:00">
+                2018-07-20
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-11 21:24:07" itemprop="dateModified" datetime="2019-01-11T21:24:07+08:00">2019-01-11</time>
-              
             
           </span>
 
@@ -710,7 +576,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
 
                 
                 
@@ -750,29 +620,21 @@
 <li>软件<br>[jdk1.7.0_79]<br>[dubbo-admin-2.5.3]<br>[apache-tomcat-7.0.63]<br>注：dubbo-admin-2.5.3.war版本不支持JDK1.8。</li>
 </ul>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/20/Dubbo管理控制台的安装/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/20/Dubbo管理控制台的安装/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -805,8 +667,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -831,20 +691,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/19/CentOS安装JDK8/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">CentOS7安装JDK8</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/19/CentOS安装JDK8/" itemprop="url">CentOS7安装JDK8</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -852,30 +703,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-19 18:54:33" itemprop="dateCreated datePublished" datetime="2018-07-19T18:54:33+08:00">2018-07-19</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-19T18:54:33+08:00">
+                2018-07-19
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-15 21:05:36" itemprop="dateModified" datetime="2019-01-15T21:05:36+08:00">2019-01-15</time>
-              
             
           </span>
 
@@ -891,7 +725,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
 
                 
                 
@@ -931,29 +769,21 @@
 </ul>
 <h1 id="检查是否已经安装JDK"><a href="#检查是否已经安装JDK" class="headerlink" title="检查是否已经安装JDK"></a>检查是否已经安装JDK</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ java -version</span><br><span class="line">-bash: java: 未找到命令</span><br><span class="line">$ rpm -qa | grep java</span><br></pre></td></tr></table></figure>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/19/CentOS安装JDK8/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/19/CentOS安装JDK8/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -986,8 +816,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1012,20 +840,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/19/Linux常用命令和软件/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">Linux常用命令和软件</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/19/Linux常用命令和软件/" itemprop="url">Linux常用命令和软件</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1033,30 +852,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-19 18:19:15" itemprop="dateCreated datePublished" datetime="2018-07-19T18:19:15+08:00">2018-07-19</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-19T18:19:15+08:00">
+                2018-07-19
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-11 22:00:54" itemprop="dateModified" datetime="2019-01-11T22:00:54+08:00">2019-01-11</time>
-              
             
           </span>
 
@@ -1072,7 +874,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/其他/" itemprop="url" rel="index"><span itemprop="name">其他</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1118,18 +924,12 @@
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -1162,8 +962,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1188,20 +986,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/16/CentOS7搭建ZooKeeper集群/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">CentOS7搭建ZooKeeper集群</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/16/CentOS7搭建ZooKeeper集群/" itemprop="url">CentOS7搭建ZooKeeper集群</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1209,30 +998,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-16 16:39:54" itemprop="dateCreated datePublished" datetime="2018-07-16T16:39:54+08:00">2018-07-16</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-16T16:39:54+08:00">
+                2018-07-16
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-11 21:42:32" itemprop="dateModified" datetime="2019-01-11T21:42:32+08:00">2019-01-11</time>
-              
             
           </span>
 
@@ -1248,7 +1020,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1285,29 +1061,21 @@
         
           <p>Dubbo建议使用ZooKeeper作为服务的注册中心。<br>ZooKeeper集群中只要有过半的节点是正常的情况下，那么整个集群对外就是可用的。正是基于这个特性，要ZK集群的节点数量要为基数（2n+1，如3、5、7个节点）较为合适。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/16/CentOS7搭建ZooKeeper集群/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/16/CentOS7搭建ZooKeeper集群/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -1340,8 +1108,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1366,20 +1132,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/16/虚拟机规划/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">虚拟机规划</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/16/虚拟机规划/" itemprop="url">虚拟机规划</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1387,30 +1144,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-16 15:41:41" itemprop="dateCreated datePublished" datetime="2018-07-16T15:41:41+08:00">2018-07-16</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-16T15:41:41+08:00">
+                2018-07-16
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-11 21:56:37" itemprop="dateModified" datetime="2019-01-11T21:56:37+08:00">2019-01-11</time>
-              
             
           </span>
 
@@ -1426,7 +1166,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/运维/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1463,29 +1207,21 @@
         
           <p>学习集群在单机上虽然能够模拟，但是无法贴近真实。所以我自己配置了一台主机，并对主机进行了虚拟化。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/16/虚拟机规划/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/16/虚拟机规划/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -1518,8 +1254,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1544,20 +1278,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/10/JVM的内存区域划分/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">JVM的内存区域划分</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/10/JVM的内存区域划分/" itemprop="url">JVM的内存区域划分</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1565,30 +1290,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-10 10:40:45" itemprop="dateCreated datePublished" datetime="2018-07-10T10:40:45+08:00">2018-07-10</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-10T10:40:45+08:00">
+                2018-07-10
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-07-11 18:44:04" itemprop="dateModified" datetime="2018-07-11T18:44:04+08:00">2018-07-11</time>
-              
             
           </span>
 
@@ -1604,7 +1312,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JAVA基础/" itemprop="url" rel="index"><span itemprop="name">JAVA基础</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA基础/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA基础</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1642,29 +1354,21 @@
           <p>根据《Java虚拟机规范（Java SE 7 版）》的规定，运行时数据区通常包括这几个部分：程序计数器(Program Counter Register)、Java栈(VM Stack)、本地方法栈(Native Method Stack)、Java堆(Java Heap)、方法区(Method Area)。</p>
 <p><img src="/images/JAVA基础/JVM的内存区域划分.png" alt="JVM的内存区域划分" title="JVM的内存区域划分"></p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/10/JVM的内存区域划分/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/10/JVM的内存区域划分/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -1697,8 +1401,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1723,20 +1425,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/09/JAVA技术图谱/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">JAVA技术图谱</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/09/JAVA技术图谱/" itemprop="url">JAVA技术图谱</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1744,18 +1437,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-09 18:01:24 / Modified: 18:40:31" itemprop="dateCreated datePublished" datetime="2018-07-09T18:01:24+08:00">2018-07-09</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-09T18:01:24+08:00">
+                2018-07-09
+              </time>
             
 
             
-              
 
-              
             
           </span>
 
@@ -1771,7 +1459,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/其他/" itemprop="url" rel="index"><span itemprop="name">其他</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1813,18 +1505,12 @@
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -1857,8 +1543,6 @@
   
   
 
-  
-
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
   
@@ -1883,20 +1567,11 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                
-                <a href="/2018/07/04/使用hexo-github搭建免费个人博客/" class="post-title-link" itemprop="http://yoursite.com/page/2/index.html">使用hexo+github搭建免费个人博客</a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2018/07/04/使用hexo-github搭建免费个人博客/" itemprop="url">使用hexo+github搭建免费个人博客</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-
-            
-            
-            
-
             
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
@@ -1904,30 +1579,13 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-
-              
-                
-              
-
-              <time title="Created: 2018-07-04 21:50:15" itemprop="dateCreated datePublished" datetime="2018-07-04T21:50:15+08:00">2018-07-04</time>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-04T21:50:15+08:00">
+                2018-07-04
+              </time>
             
 
             
-              
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-07-09 17:53:32" itemprop="dateModified" datetime="2018-07-09T17:53:32+08:00">2018-07-09</time>
-              
             
           </span>
 
@@ -1943,7 +1601,11 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/其他/" itemprop="url" rel="index"><span itemprop="name">其他</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其他/" itemprop="url" rel="index">
+                    <span itemprop="name">其他</span>
+                  </a>
+                </span>
 
                 
                 
@@ -1981,29 +1643,21 @@
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>GitHub Pages 是通过github网站托管和发布的公开网页。Hexo是一个简单、快速、强大的基于 Github Pages 的博客发布工具，支持Markdown格式，有众多优秀插件和主题。</p>
 <p>由于github pages存放的都是静态文件，博客存放的不只是文章内容，还有文章列表、分类、标签、翻页等动态内容，假如每次写完一篇文章都要手动更新博文目录和相关链接信息，相信谁都会疯掉，所以hexo所做的就是将这些md文件都放在本地，每次写完文章后调用写好的命令来批量完成相关页面的生成，然后再将有改动的页面提交到github。</p>
           <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/07/04/使用hexo-github搭建免费个人博客/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-         
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/04/使用hexo-github搭建免费个人博客/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
           <!--/noindex-->
         
       
     </div>
-
-    
-
     
     
     
 
     
 
-    
-       
-    
     
 
     
@@ -2032,12 +1686,15 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
 
           </div>
+          
+
+
           
 
         </div>
@@ -2068,95 +1725,53 @@
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/">
-                
-                    <span class="site-state-item-count">21</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
+          <nav class="site-state motion-element">
 
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">14</span>
-                    <span class="site-state-item-name">tags</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-
-          
-          
-
-          
             
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
           
+
+          
+
+          
+          
+
+          
+          
+
           
 
         </div>
@@ -2177,18 +1792,16 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love" id="animate">
+  <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">张亲</span>
 
   
-
-  
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.7.1</div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
@@ -2196,13 +1809,12 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.6.0</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
 
 
 
 
         
-
 
 
 
@@ -2222,10 +1834,7 @@
     
 
     
-	
-    
 
-    
   </div>
 
   
@@ -2244,11 +1853,7 @@
 
 
 
-
-
-
-
-
+  
 
 
 
@@ -2268,6 +1873,16 @@
 
   
   
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
     <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
@@ -2276,58 +1891,20 @@
     <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
-
-
-
   
   
-
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
-
 
 
   
 
 
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
 
-  
-
-
-
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
 
 
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
   
@@ -2336,6 +1913,57 @@
 
   
 
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
   
 
   
